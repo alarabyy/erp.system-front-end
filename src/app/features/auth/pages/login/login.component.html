@@ -1,0 +1,81 @@
+<div class="auth-page animate-fade-in">
+  <div class="auth-column-left">
+    <div class="branding-group">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+      </div>
+      <h1 class="brand-name">كوانتم<span>ERP</span></h1>
+    </div>
+    
+    <div class="hero-text">
+      <h2>أدر منظومة أعمالك بالكامل <span class="gradient-text">بدقة متناهية.</span></h2>
+      <p>الجيل القادم من منصات إدارة الموارد: مزامنة المخزون في الوقت الفعلي، إدارة الطلبات بحرفية، وتحليلات سلاسل الإمداد التنبؤية.</p>
+    </div>
+
+    <div class="testimonials">
+      <div class="test-card glass-effect">
+        <p>"نظام كوانتم نقل اللوجستيات لدينا من حالة التشتت إلى الأتمتة الكاملة. زادت الكفاءة بنسبة 40% خلال شهرين فقط."</p>
+        <div class="author">
+          <span class="a-name">أحمد الرشيد</span>
+          <span class="a-role">المدير التشغيلي في تك-نيكسوس</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright" dir="ltr">
+      &copy; 2026 Quantum Technologies. All Rights Reserved.
+    </div>
+  </div>
+
+  <div class="auth-column-right">
+    <div class="login-card luxe-card">
+      <div class="card-header">
+        <h3>دخول آمن</h3>
+        <p>قم بتسجيل الدخول باستخدام بياناتك المؤسسية</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="login()" class="luxe-form">
+        <div class="input-group">
+          <label>اسم المستخدم / البريد المؤسسي</label>
+          <div class="input-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <input type="text" formControlName="username" placeholder="مثال: user@quantumerp.com" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="label-row">
+            <label>كلمة المرور الرئيسية</label>
+            <a href="javascript:void(0)" class="forgot-link">نسيت كلمة المرور؟</a>
+          </div>
+          <div class="input-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <input type="password" formControlName="password" placeholder="••••••••••••" />
+          </div>
+        </div>
+
+        <div class="remember-row">
+          <label class="check-container">
+            <input type="checkbox" checked />
+            <span class="checkmark"></span>
+            البقاء متصلاً بالنظام
+          </label>
+        </div>
+
+        <button type="submit" class="btn-luxe btn-primary w-full" [disabled]="loading">
+          <span *ngIf="!loading">إنشاء اتصال آمن</span>
+          <span *ngIf="loading">جاري المصادقة...</span>
+        </button>
+
+        <div class="error-msg" *ngIf="errorMessage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          {{ errorMessage }}
+        </div>
+      </form>
+
+      <div class="card-footer">
+        مكتب فرعي جديد؟ <a href="javascript:void(0)" class="gradient-text">تواصل مع قسم البرمجة</a>
+      </div>
+    </div>
+  </div>
+</div>

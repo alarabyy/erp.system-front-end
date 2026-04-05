@@ -1,0 +1,9 @@
+﻿<div class="supplier-grid">
+  <article *ngFor="let supplier of suppliers" class="supplier-card">
+    <h3>{{ supplier.name }}</h3>
+    <p>{{ supplier.location }}</p>
+    <p>Material: {{ supplier.materialFocus }}</p>
+    <p class="status">{{ supplier.status }}</p>
+  </article>
+  <p class="empty" *ngIf="!suppliers?.length">Waiting for supplier sync.</p>
+</div>

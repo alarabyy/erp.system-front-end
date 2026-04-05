@@ -1,0 +1,9 @@
+﻿<div class="order-status">
+  <article *ngFor="let order of orders" class="order-card">
+    <h3>{{ order.customer }}</h3>
+    <p>Order #: {{ order.orderNumber }}</p>
+    <p>Amount: {{ order.amount | currency }}</p>
+    <p>Status: <strong>{{ order.status }}</strong></p>
+  </article>
+  <p class="empty" *ngIf="!orders?.length">No pending orders right now.</p>
+</div>

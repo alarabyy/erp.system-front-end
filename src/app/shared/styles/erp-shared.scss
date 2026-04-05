@@ -1,0 +1,167 @@
+/* Shared ERP Page Layout Styles - used across all feature pages */
+
+.erp-page { display: flex; flex-direction: column; gap: 2rem; }
+
+.page-header {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+  flex-wrap: wrap;
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.01em; }
+  .sub { color: var(--color-text-muted); margin-top: 0.25rem; font-weight: 500; }
+  .header-actions { display: flex; gap: 1rem; flex-shrink: 0; }
+}
+
+/* ---- Filter/Search Bar ---- */
+.filter-bar {
+  display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+  background: white; padding: 1.25rem 1.5rem; border-radius: 18px;
+  border: 1px solid var(--color-border); box-shadow: var(--shadow-luxe);
+  .search-wrap {
+    flex: 1; min-width: 250px; display: flex; align-items: center; gap: 0.75rem;
+    background: #f1f5f9; border-radius: 14px; padding: 0.75rem 1.25rem;
+    border: 1px solid transparent; transition: var(--transition-smooth);
+    &:focus-within { background: white; border-color: var(--color-primary); box-shadow: 0 4px 12px -4px rgba(0,98,255,.12); }
+    svg { width: 18px; height: 18px; color: var(--color-text-muted); flex-shrink: 0; }
+    input { background: transparent; border: none; outline: none; font-size: 0.9rem; width: 100%; font-weight: 500; }
+  }
+  select {
+    padding: 0.75rem 1.25rem; border-radius: 14px; border: 1px solid var(--color-border);
+    background: white; font-size: 0.9rem; font-weight: 600; color: var(--color-text-secondary);
+    cursor: pointer; outline: none; transition: var(--transition-smooth);
+    &:focus { border-color: var(--color-primary); }
+  }
+}
+
+/* ---- Data Table ---- */
+.data-table-wrap {
+  background: white; border-radius: 24px; border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-luxe); overflow: hidden;
+  .table-header { display: flex; justify-content: space-between; align-items: center; padding: 1.75rem 2rem; border-bottom: 1px solid var(--color-border);
+    h3 { font-size: 1.1rem; font-weight: 800; }
+    .table-actions { display: flex; gap: 0.75rem; }
+  }
+}
+
+table.erp-table {
+  width: 100%; border-collapse: collapse;
+  th { padding: 1rem 1.5rem; text-align: right; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); border-bottom: 1px solid var(--color-border); background: #fafbfc; white-space: nowrap; }
+  td { padding: 1.1rem 1.5rem; vertical-align: middle; border-bottom: 1px solid #f8fafc; font-size: 0.9rem; transition: background 0.2s; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafeff; }
+}
+
+/* ---- Form Pages ---- */
+.form-page {
+  display: grid; grid-template-columns: 1fr 340px; gap: 2rem; align-items: start;
+  @media(max-width:1024px) { grid-template-columns: 1fr; }
+}
+
+.form-card { background: white; border-radius: 24px; border: 1px solid var(--color-border); padding: 2.5rem; box-shadow: var(--shadow-luxe); }
+.form-card-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--color-border); }
+
+.sidebar-card { background: white; border-radius: 24px; border: 1px solid var(--color-border); padding: 2rem; box-shadow: var(--shadow-luxe); display: flex; flex-direction: column; gap: 1rem; }
+
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  @media(max-width:640px) { grid-template-columns: 1fr; }
+  &.single { grid-template-columns: 1fr; }
+}
+
+.form-group {
+  display: flex; flex-direction: column; gap: 0.6rem;
+  label { font-size: 0.85rem; font-weight: 700; color: #475569; }
+  .form-hint { font-size: 0.75rem; color: var(--color-text-muted); }
+}
+
+.erp-input {
+  padding: 0.9rem 1.25rem; border-radius: 14px; border: 1px solid var(--color-border);
+  background: #f8fafc; font-size: 0.95rem; color: #0f172a; font-weight: 500;
+  width: 100%; outline: none; transition: var(--transition-smooth);
+  font-family: var(--font-body);
+  &:focus { background: white; border-color: var(--color-primary); box-shadow: 0 4px 12px -4px rgba(0,98,255,.12); }
+  &::placeholder { color: #94a3b8; }
+}
+
+textarea.erp-input { min-height: 120px; resize: vertical; }
+
+.erp-select {
+  padding: 0.9rem 1.25rem; border-radius: 14px; border: 1px solid var(--color-border);
+  background: #f8fafc; font-size: 0.95rem; color: #0f172a; font-weight: 500;
+  width: 100%; outline: none; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-body); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: left 1rem center; background-size: 18px;
+  &:focus { background-color: white; border-color: var(--color-primary); box-shadow: 0 4px 12px -4px rgba(0,98,255,.12); }
+  &::placeholder { color: #94a3b8; }
+}
+
+.form-actions {
+  display: flex; gap: 1rem; padding-top: 1.5rem; margin-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  .btn-luxe { min-width: 140px; justify-content: center; }
+}
+
+/* ---- Pagination ---- */
+.pagination {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem; border-top: 1px solid var(--color-border);
+  .page-info { font-size: 0.85rem; color: var(--color-text-muted); font-weight: 500; }
+  .page-buttons { display: flex; gap: 0.5rem;
+    button { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--color-border); background: white; cursor: pointer; font-weight: 700; transition: var(--transition-smooth); color: var(--color-text-secondary);
+      &:hover { border-color: var(--color-primary); color: var(--color-primary); }
+      &.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+    }
+  }
+}
+
+/* ---- Status Badges ---- */
+.status-chip {
+  padding: 0.4rem 1rem; border-radius: 30px; font-size: 0.75rem; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap;
+  &::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  &.active { background: #f0fdf4; color: #16a34a; }
+  &.inactive { background: #f8fafc; color: #94a3b8; }
+  &.pending { background: #fffbeb; color: #d97706; }
+  &.confirmed { background: #eff6ff; color: #2563eb; }
+  &.shipped { background: #f5f3ff; color: #7c3aed; }
+  &.delivered { background: #f0fdf4; color: #16a34a; }
+  &.cancelled { background: #fff1f2; color: #f43f5e; }
+  &.draft { background: #f8fafc; color: #475569; }
+  &.won { background: #f0fdf4; color: #16a34a; }
+  &.lost { background: #fff1f2; color: #f43f5e; }
+  &.qualified { background: #eff6ff; color: #2563eb; }
+  &.on_leave { background: #fffbeb; color: #d97706; }
+}
+
+/* ---- Row Action Buttons ---- */
+.row-actions { display: flex; gap: 0.4rem; justify-content: flex-end; }
+.action-btn {
+  width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--color-border);
+  background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition-smooth);
+  svg { width: 16px; height: 16px; }
+  &:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); transform: translateY(-1px); }
+  &.danger:hover { background: #f43f5e; border-color: #f43f5e; }
+  &.success:hover { background: #10b981; border-color: #10b981; }
+}
+
+/* ---- Avatar ---- */
+.user-avatar {
+  width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.85rem; color: white; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+}
+
+/* ---- Detail Row ---- */
+.detail-row { display: flex; gap: 0.75rem; align-items: center; padding: 0.85rem 0; border-bottom: 1px solid #f1f5f9;
+  &:last-child { border-bottom: none; }
+  .d-label { font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); width: 120px; flex-shrink: 0; }
+  .d-value { font-size: 0.9rem; font-weight: 600; color: #0f172a; }
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+  padding: 5rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  .es-icon { font-size: 3.5rem; }
+  h3 { font-size: 1.25rem; font-weight: 800; }
+  p { color: var(--color-text-muted); font-weight: 500; max-width: 320px; line-height: 1.7; }
+}

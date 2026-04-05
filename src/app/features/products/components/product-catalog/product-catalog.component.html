@@ -1,0 +1,69 @@
+<div class="table-container animate-fade-in">
+  <table class="luxe-table">
+    <thead>
+      <tr>
+        <th>معرف المنتج التفصيلي</th>
+        <th>الفئة</th>
+        <th>مستوى المخزون</th>
+        <th>التقييم المالي</th>
+        <th>حالة التوفر</th>
+        <th class="text-right">إدارة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>
+          <div class="product-info">
+            <div class="sku-badge">{{ product.sku }}</div>
+            <div class="name-box">
+              <span class="product-name">{{ product.name }}</span>
+              <span class="product-id">معرف: #{{ product.id }}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="category-chip">{{ product.category }}</span>
+        </td>
+        <td>
+          <div class="stock-info">
+            <span class="quantity">{{ product.stock }} وحدة</span>
+            <div class="stock-progress">
+              <div class="bar" [style.width.%]="product.stock > 100 ? 100 : product.stock" 
+                   [ngClass]="{'low': product.stock < 20, 'mid': product.stock >= 20 && product.stock < 80, 'high': product.stock >= 80}">
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="price">{{ product.price | currency:'USD':'symbol' }}</span>
+        </td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'badge-success': product.status === 'In Stock',
+            'badge-warning': product.status === 'Low Stock',
+            'badge-danger': product.status === 'Out of Stock'
+          }">
+            {{ product.status === 'In Stock' ? 'متوفر' : product.status === 'Low Stock' ? 'مخزون منخفض' : 'نفذت الكمية' }}
+          </span>
+        </td>
+        <td class="text-right">
+          <div class="action-buttons">
+            <button class="action-btn" aria-label="Edit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            </button>
+            <button class="action-btn analytics" aria-label="QuickView">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="empty-state" *ngIf="!products?.length">
+    <div class="empty-icon">📭</div>
+    <h3>المستودع فارغ حالياً</h3>
+    <p>لا توجد بيانات نشطة للمزامنة في هذه الحفظة.</p>
+    <button class="btn-luxe btn-primary" style="margin-top: 1rem;">مزامنة فورية</button>
+  </div>
+</div>

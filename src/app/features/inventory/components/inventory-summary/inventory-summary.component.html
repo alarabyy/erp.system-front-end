@@ -1,0 +1,11 @@
+﻿<div class="inventory-summary">
+  <article *ngFor="let record of records" class="inventory-card">
+    <header>
+      <h3>{{ record.location }}</h3>
+      <span>{{ record.capacity }}% capacity</span>
+    </header>
+    <p>SKU count: {{ record.skuCount }}</p>
+    <p>Last refresh: {{ record.lastUpdated | date:'short' }}</p>
+  </article>
+  <p class="empty" *ngIf="!records?.length">Inventory data is catching up.</p>
+</div>

@@ -1,0 +1,29 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div class="header-content">
+      <p class="eyebrow">Supply Chain Management</p>
+      <h1>Supplier Directory</h1>
+      <p class="subtitle">Management of external vendors, contract terms, and lead times.</p>
+    </div>
+    <div class="header-info">
+      <div class="info-badge">
+        <span class="count">48</span>
+        <span class="label">Verified Vendors</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="action-card">
+    <div class="card-icon">🤝</div>
+    <div class="card-text">
+      <h3>Vendor Relations</h3>
+      <p>
+        Building strong relationships with suppliers is key to a healthy inventory. 
+        Track performance metrics and maintain up-to-date contact information here.
+      </p>
+    </div>
+    <button class="btn-action">Partner Onboarding</button>
+  </div>
+
+  <app-supplier-card [suppliers]="suppliers$ | async"></app-supplier-card>
+</section>

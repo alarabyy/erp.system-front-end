@@ -1,0 +1,78 @@
+<div class="erp-page animate-fade-in">
+  <header class="page-header">
+    <div>
+      <h1>نظرة عامة على المخزون</h1>
+      <p class="sub">مراقبة وتحليل حركة المخزون والمنتجات في الوقت الفعلي</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-luxe btn-ghost" routerLink="/inventory/products/create">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        إضافة منتج
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats Grid -->
+  <div class="inv-stats">
+    <div class="inv-stat-card luxe-card" *ngFor="let s of stats" [style]="'border-top:3px solid ' + s.color">
+      <div class="inv-icon" [style]="'background:' + s.bg + ';color:' + s.color">{{ s.icon }}</div>
+      <h2 [style.color]="s.color">{{ s.value }}</h2>
+      <span>{{ s.label }}</span>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="inv-charts">
+    <div class="luxe-card" style="padding:1.75rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
+        <div>
+          <h3 style="font-size:1rem;font-weight:800">📊 حركة المخزون السنوية</h3>
+          <p style="font-size:.78rem;color:var(--color-text-muted);margin-top:.2rem">الوارد والصادر شهرياً لعام 2026</p>
+        </div>
+        <div style="display:flex;gap:.75rem;font-size:.78rem;font-weight:600;color:#64748b">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0062ff;vertical-align:middle;margin-left:.35rem"></span>وارد</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#10b981;vertical-align:middle;margin-left:.35rem"></span>صادر</span>
+        </div>
+      </div>
+      <apx-chart
+        [series]="stockMovementChart.series"
+        [chart]="stockMovementChart.chart"
+        [xaxis]="stockMovementChart.xaxis"
+        [yaxis]="stockMovementChart.yaxis"
+        [plotOptions]="stockMovementChart.plotOptions"
+        [colors]="stockMovementChart.colors"
+        [dataLabels]="stockMovementChart.dataLabels"
+        [grid]="stockMovementChart.grid"
+        [legend]="stockMovementChart.legend"
+        [tooltip]="stockMovementChart.tooltip">
+      </apx-chart>
+    </div>
+
+    <div class="luxe-card" style="padding:1.75rem">
+      <div style="margin-bottom:1.25rem">
+        <h3 style="font-size:1rem;font-weight:800">🥧 توزيع حالة المخزون</h3>
+        <p style="font-size:.78rem;color:var(--color-text-muted);margin-top:.2rem">نسبة الأصناف حسب حالة التوافر</p>
+      </div>
+      <apx-chart
+        [series]="stockStatusChart.series"
+        [chart]="stockStatusChart.chart"
+        [labels]="stockStatusChart.labels"
+        [colors]="stockStatusChart.colors"
+        [plotOptions]="stockStatusChart.plotOptions"
+        [legend]="stockStatusChart.legend"
+        [responsive]="stockStatusChart.responsive">
+      </apx-chart>
+    </div>
+  </div>
+
+  <!-- Product Catalog -->
+  <div class="luxe-card" style="overflow:hidden">
+    <div class="table-header">
+      <h3>قائمة المنتجات</h3>
+      <div class="table-actions">
+        <button class="btn-luxe btn-ghost" style="font-size:.8rem;padding:.5rem 1rem">📥 تصدير</button>
+      </div>
+    </div>
+    <app-product-catalog [products]="products$ | async"></app-product-catalog>
+  </div>
+</div>

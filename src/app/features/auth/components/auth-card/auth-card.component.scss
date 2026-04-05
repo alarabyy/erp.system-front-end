@@ -1,0 +1,25 @@
+.auth-card {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--color-border);
+}
+
+.card-glow {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(0, 98, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .auth-card {
+    padding: 2rem;
+  }
+}

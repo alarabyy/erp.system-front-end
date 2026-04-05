@@ -1,0 +1,21 @@
+﻿.order-status {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.order-card {
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.order-card strong {
+  color: var(--color-primary);
+}
+
+.empty {
+  color: var(--color-muted);
+  font-weight: 600;
+}

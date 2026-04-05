@@ -1,0 +1,38 @@
+<section class="feature-page">
+  <div class="page-title-group">
+    <header>
+      <p class="eyebrow">Analytics & BI</p>
+      <h1>Performance Pulse</h1>
+      <p class="subtitle">Operational KPIs and strategic insights delivered via automated reporting.</p>
+    </header>
+  </div>
+
+  <div class="report-explanation">
+    <div class="info-content">
+      <h3>Data-Driven Decisions</h3>
+      <p>
+        Stay ahead of market trends by analyzing your inventory turnover, sales velocity, and warehouse efficiency. 
+        All reports are generated in real-time based on the latest transactional data.
+      </p>
+    </div>
+    <div class="report-cta">
+      <button class="btn-primary">Schedule Auto-Report</button>
+    </div>
+  </div>
+
+  <app-report-filter></app-report-filter>
+
+  <div class="reports-grid" *ngIf="reports$ | async as reports">
+    <article *ngFor="let report of reports" class="report-card">
+      <div class="report-header">
+        <span class="report-icon">📊</span>
+        <h3>{{ report.title }}</h3>
+      </div>
+      <p class="report-summary">{{ report.summary }}</p>
+      <div class="report-footer">
+        <span class="meta">Updated {{ report.updated | date:'short' }}</span>
+        <button class="btn-link">View Detailed →</button>
+      </div>
+    </article>
+  </div>
+</section>

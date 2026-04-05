@@ -1,0 +1,118 @@
+<div class="dashboard-container animate-fade-in" *ngIf="stats$ | async as stats">
+  <header class="dashboard-header">
+    <div class="header-titles">
+      <h1 class="gradient-text">نظرة عامة على العمليات</h1>
+      <p>تحليلات في الوقت الفعلي لنظام كوانتم ERP</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-luxe btn-ghost" routerLink="/reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+        التقارير
+      </button>
+      <button class="btn-luxe btn-primary" routerLink="/sales/create">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        إنشاء طلب جديد
+      </button>
+    </div>
+  </header>
+
+  <section class="stats-grid animate-fade-in">
+    <div class="stat-card luxe-card">
+      <div class="stat-header">
+        <div class="stat-icon primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+        <div class="stat-trend up">▲ {{ stats.revenueGrowth }}%</div>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">إجمالي الإيرادات</span>
+        <h2 class="stat-value">{{ stats.totalRevenue | currency }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card luxe-card">
+      <div class="stat-header">
+        <div class="stat-icon accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line></svg>
+        </div>
+        <div class="stat-trend up">▲ {{ stats.ordersGrowth }}%</div>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">الطلبات النشطة</span>
+        <h2 class="stat-value">{{ stats.monthlyOrders }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card luxe-card">
+      <div class="stat-header">
+        <div class="stat-icon warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        </div>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">إجمالي المستخدمين</span>
+        <h2 class="stat-value">{{ stats.totalUsers }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card luxe-card">
+      <div class="stat-header">
+        <div class="stat-icon danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line></svg>
+        </div>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">تنبيهات المخزون</span>
+        <h2 class="stat-value">{{ stats.lowStockAlerts }} <small>تنبيه</small></h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="main-grid animate-fade-in">
+    <div class="luxe-card catalog-card">
+      <div class="card-header">
+        <h3>قائمة المنتجات النشطة</h3>
+        <a routerLink="/inventory" class="btn-luxe btn-ghost" style="font-size:.8rem;padding:.5rem 1rem">عرض الكل ←</a>
+      </div>
+      <app-product-catalog [products]="products$ | async"></app-product-catalog>
+    </div>
+
+    <div class="feed-column">
+      <div class="luxe-card activity-feed">
+        <div class="card-header">
+          <h3>آخر النشاطات</h3>
+          <span class="badge badge-success">مباشر</span>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of (activities$ | async)">
+            <div class="activity-icon" [ngClass]="activity.type">
+              <span *ngIf="activity.type === 'order'">🛒</span>
+              <span *ngIf="activity.type === 'stock'">📦</span>
+              <span *ngIf="activity.type === 'alert'">⚠️</span>
+              <span *ngIf="activity.type === 'supplier'">🤝</span>
+              <span *ngIf="activity.type === 'payment'">💳</span>
+              <span *ngIf="activity.type === 'user'">👤</span>
+            </div>
+            <div class="activity-message">
+              <p>{{ activity.message }}</p>
+              <div class="activity-meta">
+                <span class="time">{{ activity.time }}</span>
+                <span class="user">/ {{ activity.user }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="luxe-card quick-links">
+        <h3>وصول سريع</h3>
+        <div class="link-grid">
+          <button class="link-item" routerLink="/sales"><span class="l-icon">🛒</span>المبيعات</button>
+          <button class="link-item" routerLink="/purchases"><span class="l-icon">🧾</span>المشتريات</button>
+          <button class="link-item" routerLink="/hr"><span class="l-icon">👥</span>الموارد البشرية</button>
+          <button class="link-item" routerLink="/crm"><span class="l-icon">❤️</span>إدارة العملاء</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

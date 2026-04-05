@@ -1,0 +1,206 @@
+<div class="dashboard animate-fade-in" *ngIf="stats$ | async as stats">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div>
+      <h1>لوحة القيادة</h1>
+      <p class="sub">مرحباً بك — تحليلات وأداء نظام كوانتم ERP في الوقت الفعلي</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-luxe btn-ghost" routerLink="/reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        كل التقارير
+      </button>
+      <button class="btn-luxe btn-primary" routerLink="/sales/create">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        إنشاء طلب جديد
+      </button>
+    </div>
+  </header>
+
+  <!-- KPI Cards -->
+  <section class="kpi-grid">
+    <div class="kpi-card luxe-card">
+      <div class="kpi-icon-wrap primary-bg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">إجمالي الإيرادات</span>
+        <h2 class="kpi-value">{{ stats.totalRevenue | currency:'USD':'symbol':'1.0-0' }}</h2>
+        <span class="kpi-badge up">▲ {{ stats.revenueGrowth }}% نمو شهري</span>
+      </div>
+    </div>
+
+    <div class="kpi-card luxe-card">
+      <div class="kpi-icon-wrap blue-bg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">الطلبات هذا الشهر</span>
+        <h2 class="kpi-value">{{ stats.monthlyOrders }}</h2>
+        <span class="kpi-badge up">▲ {{ stats.ordersGrowth }}% نمو</span>
+      </div>
+    </div>
+
+    <div class="kpi-card luxe-card">
+      <div class="kpi-icon-wrap green-bg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">إجمالي المستخدمين</span>
+        <h2 class="kpi-value">{{ stats.totalUsers }}</h2>
+        <span class="kpi-badge up">▲ 3 جدد هذا الأسبوع</span>
+      </div>
+    </div>
+
+    <div class="kpi-card luxe-card">
+      <div class="kpi-icon-wrap red-bg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">تنبيهات المخزون</span>
+        <h2 class="kpi-value">{{ stats.lowStockAlerts }}</h2>
+        <span class="kpi-badge down">▼ تحتاج مراجعة فورية</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARTS ROW 1: Revenue Area + Orders Donut -->
+  <section class="charts-row">
+    <div class="chart-card luxe-card revenue-chart">
+      <div class="chart-head">
+        <div>
+          <h3>الإيرادات مقابل المصروفات</h3>
+          <p class="chart-sub">مقارنة سنوية شاملة لعام 2026</p>
+        </div>
+        <div class="chart-legend">
+          <span class="leg-dot" style="background:#0062ff"></span><span>الإيرادات</span>
+          <span class="leg-dot" style="background:#a855f7"></span><span>المصروفات</span>
+        </div>
+      </div>
+      <apx-chart
+        [series]="revenueChart.series"
+        [chart]="revenueChart.chart"
+        [xaxis]="revenueChart.xaxis"
+        [yaxis]="revenueChart.yaxis"
+        [stroke]="revenueChart.stroke"
+        [fill]="revenueChart.fill"
+        [dataLabels]="revenueChart.dataLabels"
+        [grid]="revenueChart.grid"
+        [colors]="revenueChart.colors"
+        [tooltip]="revenueChart.tooltip">
+      </apx-chart>
+    </div>
+
+    <div class="chart-card luxe-card donut-chart">
+      <div class="chart-head">
+        <div>
+          <h3>توزيع حالات الطلبات</h3>
+          <p class="chart-sub">الشهر الحالي</p>
+        </div>
+      </div>
+      <apx-chart
+        [series]="ordersDonut.series"
+        [chart]="ordersDonut.chart"
+        [labels]="ordersDonut.labels"
+        [colors]="ordersDonut.colors"
+        [plotOptions]="ordersDonut.plotOptions"
+        [legend]="ordersDonut.legend"
+        [responsive]="ordersDonut.responsive">
+      </apx-chart>
+    </div>
+  </section>
+
+  <!-- CHARTS ROW 2: Top Products Bar + Activity Feed -->
+  <section class="lower-grid">
+    <div class="chart-card luxe-card">
+      <div class="chart-head">
+        <div>
+          <h3>أعلى المنتجات مبيعاً</h3>
+          <p class="chart-sub">إجمالي الوحدات المباعة هذا الشهر</p>
+        </div>
+        <a routerLink="/inventory" class="chart-link">عرض الكل ←</a>
+      </div>
+      <apx-chart
+        [series]="topProductsBar.series"
+        [chart]="topProductsBar.chart"
+        [xaxis]="topProductsBar.xaxis"
+        [yaxis]="topProductsBar.yaxis"
+        [plotOptions]="topProductsBar.plotOptions"
+        [colors]="topProductsBar.colors"
+        [dataLabels]="topProductsBar.dataLabels"
+        [grid]="topProductsBar.grid">
+      </apx-chart>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="luxe-card activity-panel">
+      <div class="chart-head">
+        <div>
+          <h3>النشاط الحديث</h3>
+          <p class="chart-sub">آخر العمليات المسجلة</p>
+        </div>
+        <span class="live-badge">● مباشر</span>
+      </div>
+      <div class="activity-list" *ngIf="activities$ | async as activities">
+        <div class="activity-row" *ngFor="let act of activities">
+          <div class="act-icon">{{ getActivityIcon(act.type) }}</div>
+          <div class="act-body">
+            <p class="act-msg">{{ act.message }}</p>
+            <div class="act-meta">
+              <span>{{ act.time }}</span>
+              <span class="dot">·</span>
+              <span>{{ act.user }}</span>
+              <span *ngIf="act.amount" class="act-amount">{{ act.amount | currency:'USD':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Module Quick Access -->
+  <section class="modules-grid">
+    <div class="module-card" routerLink="/sales">
+      <span class="mod-emoji">🛒</span>
+      <h3>المبيعات</h3>
+      <p>الطلبات والفواتير</p>
+    </div>
+    <div class="module-card" routerLink="/inventory">
+      <span class="mod-emoji">📦</span>
+      <h3>المخزون</h3>
+      <p>المنتجات والمستودعات</p>
+    </div>
+    <div class="module-card" routerLink="/purchases">
+      <span class="mod-emoji">🧾</span>
+      <h3>المشتريات</h3>
+      <p>الموردون وأوامر الشراء</p>
+    </div>
+    <div class="module-card" routerLink="/hr">
+      <span class="mod-emoji">👥</span>
+      <h3>الموارد البشرية</h3>
+      <p>الموظفون والرواتب</p>
+    </div>
+    <div class="module-card" routerLink="/crm">
+      <span class="mod-emoji">❤️</span>
+      <h3>العملاء (CRM)</h3>
+      <p>العملاء المحتملون</p>
+    </div>
+    <div class="module-card" routerLink="/accounting">
+      <span class="mod-emoji">💰</span>
+      <h3>المحاسبة</h3>
+      <p>الحسابات والقيود</p>
+    </div>
+    <div class="module-card" routerLink="/reports">
+      <span class="mod-emoji">📊</span>
+      <h3>التقارير</h3>
+      <p>تحليلات متكاملة</p>
+    </div>
+    <div class="module-card" routerLink="/settings">
+      <span class="mod-emoji">⚙️</span>
+      <h3>الإعدادات</h3>
+      <p>تكوين النظام</p>
+    </div>
+  </section>
+
+</div>
