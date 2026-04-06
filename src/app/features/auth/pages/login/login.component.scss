@@ -121,8 +121,4 @@
   .support-contact { position: absolute; bottom: 3rem; font-size: 0.8rem; color: #94a3b8; font-weight: 700; span { color: #475569; } }
 }
 
-@keyframes animate-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
+
