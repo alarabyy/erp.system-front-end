@@ -52,8 +52,8 @@ import { Observable } from 'rxjs';
               <td>{{ o.customer }}</td>
               <td><span style="background:#eff6ff;color:#2563eb;padding:.3rem .7rem;border-radius:8px;font-size:.78rem;font-weight:700">{{ o.region }}</span></td>
               <td style="font-weight:800;color:var(--color-primary)">{{ o.total | currency:'USD':'symbol':'1.0-0' }}</td>
-              <td><span class="status-chip" [class]="o.status">{{ {'pending':'قيد الانتظار','confirmed':'مؤكد','shipped':'مشحون','delivered':'مسلّم','cancelled':'ملغي'}[o.status] }}</span></td>
-              <td><span class="status-chip" [class]="o.paymentStatus === 'paid' ? 'active' : o.paymentStatus === 'partial' ? 'pending' : 'cancelled'">{{ {'paid':'مدفوع','partial':'جزئي','unpaid':'غير مدفوع'}[o.paymentStatus] }}</span></td>
+              <td><span class="status-chip" [class]="o.status">{{ ($any({'pending':'قيد الانتظار','confirmed':'مؤكد','shipped':'مشحون','delivered':'مسلّم','cancelled':'ملغي'}))[o.status] }}</span></td>
+              <td><span class="status-chip" [class]="o.paymentStatus === 'paid' ? 'active' : o.paymentStatus === 'partial' ? 'pending' : 'cancelled'">{{ ($any({'paid':'مدفوع','partial':'جزئي','unpaid':'غير مدفوع'}))[o.paymentStatus] }}</span></td>
             </tr>
           </tbody>
         </table>

@@ -5,7 +5,7 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" [(ngModel)]="searchQuery" (input)="onGlobalSearch()" placeholder="ابحث عن مخزون، طلبات، أو موردين..." aria-label="Search">
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onGlobalSearch()" placeholder="ابحث عن مخزون، طلبات، أو موردين..." aria-label="Search">
     </div>
   </div>
 
@@ -16,6 +16,16 @@
     </div>
 
     <div class="divider"></div>
+    
+    <!-- زرار المساعد الذكي AI -->
+    <div class="ai-assistant-wrap" title="المساعد الذكي (AI Online)">
+      <button class="icon-btn glass-effect ai-pulsing" routerLink="/ai/chat" aria-label="AI Assistant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L9 9l-7 3 7 3 3 7 3-7 7-3-7-3-3-7z"></path>
+        </svg>
+        <span class="ai-status-dot"></span>
+      </button>
+    </div>
 
     <div class="notification-container">
       <button class="icon-btn glass-effect" routerLink="/notifications" aria-label="Notifications">

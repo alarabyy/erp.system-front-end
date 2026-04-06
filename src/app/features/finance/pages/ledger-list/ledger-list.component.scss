@@ -1,0 +1,59 @@
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.75rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  transition: transform 0.2s;
+
+  &:hover { transform: translateY(-4px); }
+
+  .card-icon { font-size: 1.75rem; opacity: 0.8; }
+  
+  &.asset-border { border-right: 4px solid #10b981; }
+  &.liability-border { border-right: 4px solid #ef4444; }
+  &.profit-border { border-right: 4px solid #3b82f6; }
+
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    .label { font-size: 0.8rem; font-weight: 700; color: #64748b; }
+    .value { font-size: 1.4rem; font-weight: 900; color: #1e293b; }
+  }
+
+  .trend {
+    position: absolute; top: 1rem; left: 1rem;
+    font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;
+    &.up { background: #f0fdf4; color: #16a34a; }
+    &.down { background: #fef2f2; color: #dc2626; }
+  }
+}
+
+.type-tag {
+  padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+  &.asset { background: #f0fdf4; color: #16a34a; }
+  &.liability { background: #fef2f2; color: #dc2626; }
+  &.equity { background: #eff6ff; color: #1d4ed8; }
+  &.income { background: #f5f3ff; color: #7c3aed; }
+  &.expense { background: #fff7ed; color: #c2410c; }
+}
+
+.balance-cell { font-family: 'Inter', sans-serif; font-weight: 800; color: #1e293b; letter-spacing: -0.5px; }
+
+.table-header {
+  .title-group {
+    h3 { margin-bottom: 0.25rem; }
+    p { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+  }
+}

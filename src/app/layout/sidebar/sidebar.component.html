@@ -1,55 +1,63 @@
-<aside class="sidebar-wrapper luxe-sidebar">
+<aside class="sidebar-wrapper">
+  <!-- Header: Brand & Identity -->
   <div class="sidebar-header">
     <div class="logo">
       <div class="logo-box">Q</div>
-      <div class="logo-text">
-        <span class="brand">كوانتم ERP</span>
-        <span class="version">نسخة بريميوم v2.5</span>
+      <div class="brand">كوانتم Business v3.0</div>
+    </div>
+  </div>
+
+  <!-- Search Bar: Classic Design Restored -->
+  <div class="sidebar-search">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      (input)="onSearch()" 
+      placeholder="ابحث في قوائم السيستم...">
+  </div>
+
+  <!-- Navigation: Reorganized & Eye-Friendly -->
+  <div class="sidebar-nav">
+    <div *ngFor="let group of navItems" class="nav-group">
+      <!-- Group Header with Separator Style -->
+      <div 
+        class="nav-group-header" 
+        (click)="toggleItem(group)"
+        [class.active]="group.expanded">
+        <span class="group-label">{{ group.label }}</span>
+        <span class="group-arrow">◀</span>
+      </div>
+
+      <!-- Sub-Items: Max 5-6 Items per Highly-Organized Group -->
+      <div class="sub-nav-group" *ngIf="group.expanded">
+        <div 
+          *ngFor="let item of group.children" 
+          class="nav-item" 
+          [routerLink]="item.path" 
+          routerLinkActive="active"
+          title="{{ item.label }}">
+          
+          <div class="item-content">
+            <span class="nav-icon" [style.color]="item.iconColor">{{ item.icon }}</span>
+            <span class="nav-label">{{ item.label }}</span>
+          </div>
+
+          <span class="nav-badge" *ngIf="item.badge">
+            {{ item.badge }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
-  <nav class="sidebar-nav">
-    <div *ngFor="let item of navItems">
-      <div 
-        class="nav-item" 
-        [routerLink]="item.path" 
-        [routerLinkActive]="item.path ? 'active' : ''"
-        (click)="toggleItem(item)"
-        [class.has-children]="item.children"
-        [class.expanded]="item.expanded">
-        <span class="nav-icon">{{ item.icon }}</span>
-        <span class="nav-label">{{ item.label }}</span>
-        <span class="nav-badge" *ngIf="item.badge" [class]="item.badgeType || 'primary'">{{ item.badge }}</span>
-        <span class="arrow" *ngIf="item.children">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"></path></svg>
-        </span>
-      </div>
-
-      <div class="sub-nav-wrapper" *ngIf="item.children && item.expanded">
-        <div 
-          *ngFor="let child of item.children" 
-          class="sub-nav-item" 
-          [routerLink]="child.path" 
-          routerLinkActive="active">
-          <span class="sub-icon">{{ child.icon }}</span>
-          <span class="sub-label">{{ child.label }}</span>
-          <span class="nav-badge mini" *ngIf="child.badge" [class]="child.badgeType || 'primary'">{{ child.badge }}</span>
-        </div>
-      </div>
-    </div>
-  </nav>
-
+  <!-- Footer: Professional User Card Integrated -->
   <div class="sidebar-footer">
-    <div class="user-pill luxe-card">
-      <div class="user-avatar-small">أح</div>
+    <div class="user-box luxe-card">
+      <div class="avatar">أ</div>
       <div class="user-info">
-        <span class="user-name">أحمد الرشيد</span>
-        <span class="user-role">مدير النظام</span>
+        <div class="name">أحمد الرشيد</div>
+        <div class="logout-link" (click)="logout()">تسجيل الخروج ←</div>
       </div>
-      <button class="logout-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      </button>
     </div>
   </div>
 </aside>

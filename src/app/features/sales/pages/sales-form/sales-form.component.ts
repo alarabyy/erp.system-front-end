@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DataMockService, SalesOrder } from '../../../../core/services/data-mock.service';
+import { DataMockService } from '../../../../core/services/data-mock.service';
+import { SalesOrder } from '../../../../core/models/data-models';
 
 @Component({
   standalone: true,
@@ -124,7 +125,7 @@ export class SalesFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
-      this.data.getSalesOrderById(id).subscribe(order => {
+      this.data.getSalesOrderById(id).subscribe((order: SalesOrder | undefined) => {
         if (order) {
           this.form = { ...order };
           this.items = Array.from({ length: order.items }, (_, i) => ({

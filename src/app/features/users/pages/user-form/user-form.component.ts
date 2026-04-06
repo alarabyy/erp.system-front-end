@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DataMockService, User } from '../../../../core/services/data-mock.service';
+import { DataMockService } from '../../../../core/services/data-mock.service';
+import { User } from '../../../../core/models/data-models';
 
 @Component({
   standalone: true,
@@ -114,7 +115,7 @@ export class UserFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
-      this.data.getUserById(id).subscribe(user => { if (user) this.form = { ...user }; });
+      this.data.getUserById(id).subscribe((user: User | undefined) => { if (user) this.form = { ...user }; });
     }
   }
 

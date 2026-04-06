@@ -157,7 +157,7 @@ export class ChatPageComponent implements OnInit {
 
   loadMessages() {
     if (!this.selectedUserId) return;
-    this.data.getChatMessages(this.selectedUserId).subscribe(msgs => {
+    this.data.getChatMessages(this.selectedUserId).subscribe((msgs: ChatMessage[]) => {
       this.messages = msgs;
     });
   }

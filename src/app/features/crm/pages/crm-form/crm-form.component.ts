@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DataMockService, Lead } from '../../../../core/services/data-mock.service';
+import { DataMockService } from '../../../../core/services/data-mock.service';
+import { Lead } from '../../../../core/models/data-models';
 
 @Component({
   standalone: true,
@@ -21,10 +22,10 @@ import { DataMockService, Lead } from '../../../../core/services/data-mock.servi
             <div class="form-group"><label>اسم العميل *</label><input class="erp-input" [(ngModel)]="form.name" placeholder="الاسم الكامل"></div>
             <div class="form-group"><label>اسم الشركة</label><input class="erp-input" [(ngModel)]="form.company" placeholder="اسم الشركة"></div>
             <div class="form-group"><label>البريد الإلكتروني</label><input class="erp-input" type="email" [(ngModel)]="form.email"></div>
-            <div class="form-group"><label>رقم الهاتف</label><input class="erp-input" [(ngModel)]="form.phone"></div>
-            <div class="form-group"><label>قيمة الفرصة (USD)</label><input class="erp-input" type="number" [(ngModel)]="form.value" min="0"></div>
+            <div class="form-group"><label>رقم الهاتف</label><input class="erp-input" [(ngModel)]="asAny(form).phone"></div>
+            <div class="form-group"><label>قيمة الفرصة (USD)</label><input class="erp-input" type="number" [(ngModel)]="asAny(form).value" min="0"></div>
             <div class="form-group"><label>المصدر</label>
-              <select class="erp-input erp-select" [(ngModel)]="form.source">
+              <select class="erp-input erp-select" [(ngModel)]="asAny(form).source">
                 <option value="موقع إلكتروني">موقع إلكتروني</option>
                 <option value="معرض تجاري">معرض تجاري</option>
                 <option value="إحالة عميل">إحالة عميل</option>
@@ -52,8 +53,8 @@ import { DataMockService, Lead } from '../../../../core/services/data-mock.servi
         <div class="sidebar-card">
           <div class="form-card-title">📈 متابعة الفرصة</div>
           <div class="detail-row"><span class="d-label">الحالة</span><span class="d-value status-chip" [class]="form.status">{{ form.status || '-' }}</span></div>
-          <div class="detail-row"><span class="d-label">القيمة</span><span class="d-value" style="color:var(--color-primary);font-weight:800">{{ (form.value || 0) | currency:'USD':'symbol':'1.0-0' }}</span></div>
-          <div class="detail-row"><span class="d-label">المصدر</span><span class="d-value">{{ form.source || '-' }}</span></div>
+          <div class="detail-row"><span class="d-label">القيمة</span><span class="d-value" style="color:var(--color-primary);font-weight:800">{{ (asAny(form).value || 0) | currency:'USD':'symbol':'1.0-0' }}</span></div>
+          <div class="detail-row"><span class="d-label">المصدر</span><span class="d-value">{{ asAny(form).source || '-' }}</span></div>
           <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.75rem">
             <button class="btn-luxe btn-ghost" style="width:100%;justify-content:center">📞 تسجيل مكالمة</button>
             <button class="btn-luxe btn-ghost" style="width:100%;justify-content:center">📧 إرسال بريد</button>
@@ -74,9 +75,11 @@ export class CrmFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
-      this.data.getLeadById(id).subscribe(lead => { if (lead) this.form = { ...lead }; });
+      this.data.getLeadById(id).subscribe((lead: Lead | undefined) => { if (lead) this.form = { ...lead }; });
     }
   }
+
+  asAny(obj: any) { return obj; }
 
   save() {
     alert(this.isEdit ? '✅ تم حفظ بيانات العميل' : '✅ تم إضافة العميل المحتمل');

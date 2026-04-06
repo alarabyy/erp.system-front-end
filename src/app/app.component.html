@@ -1,10 +1,19 @@
-<div class="luxe-app">
-  <app-sidebar></app-sidebar>
-  <div class="main-wrapper">
-    <app-navbar></app-navbar>
-    <main class="app-content animate-fade-in">
+<div class="app-container" [class.is-authenticated]="isAuthenticated$ | async">
+  <!-- الـ Sidebar والـ Navbar يظهرون فقط إذا كان المستخدم مسجل دخول -->
+  <ng-container *ngIf="isAuthenticated$ | async as loggedIn; else loggedOut">
+    <app-sidebar></app-sidebar>
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      <main class="app-content animate-fade-in">
+        <router-outlet></router-outlet>
+      </main>
+      <app-footer></app-footer>
+    </div>
+  </ng-container>
+
+  <ng-template #loggedOut>
+    <main class="full-content animate-fade-in">
       <router-outlet></router-outlet>
     </main>
-    <app-footer></app-footer>
-  </div>
+  </ng-template>
 </div>

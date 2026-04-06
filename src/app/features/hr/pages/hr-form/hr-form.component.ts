@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DataMockService, Employee } from '../../../../core/services/data-mock.service';
+import { DataMockService } from '../../../../core/services/data-mock.service';
+import { Employee } from '../../../../core/models/data-models';
 
 @Component({
   standalone: true,
@@ -33,7 +34,7 @@ import { DataMockService, Employee } from '../../../../core/services/data-mock.s
               </div>
               <div class="form-group"><label>المسمى الوظيفي *</label><input class="erp-input" [(ngModel)]="form.position" placeholder="مثال: مدير مبيعات"></div>
               <div class="form-group"><label>الراتب الشهري (USD) *</label><input class="erp-input" type="number" [(ngModel)]="form.salary" min="0"></div>
-              <div class="form-group"><label>تاريخ بدء العمل *</label><input class="erp-input" type="date" [(ngModel)]="form.startDate"></div>
+              <div class="form-group"><label>تاريخ بدء العمل *</label><input class="erp-input" type="date" [(ngModel)]="asAny(form).startDate"></div>
               <div class="form-group"><label>الحالة</label>
                 <select class="erp-input erp-select" [(ngModel)]="form.status">
                   <option value="active">نشط</option>
@@ -57,8 +58,8 @@ import { DataMockService, Employee } from '../../../../core/services/data-mock.s
           <div class="detail-row"><span class="d-label">القسم</span><span class="d-value">{{ form.department || '-' }}</span></div>
           <div class="detail-row"><span class="d-label">المسمى</span><span class="d-value">{{ form.position || '-' }}</span></div>
           <div class="detail-row"><span class="d-label">الحالة</span>
-            <span class="d-value status-chip" [class]="form.status === 'active' ? 'active' : form.status === 'on_leave' ? 'pending' : 'inactive'">
-              {{ form.status === 'active' ? 'نشط' : form.status === 'on_leave' ? 'في إجازة' : 'منتهي' }}
+            <span class="d-value status-chip" [class]="asAny(form).status === 'active' ? 'active' : asAny(form).status === 'on_leave' ? 'pending' : 'inactive'">
+              {{ asAny(form).status === 'active' ? 'نشط' : asAny(form).status === 'on_leave' ? 'في إجازة' : 'منتهي' }}
             </span>
           </div>
           <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.75rem">
@@ -81,9 +82,11 @@ export class HrFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
-      this.data.getEmployeeById(id).subscribe(emp => { if (emp) this.form = { ...emp }; });
+      this.data.getEmployeeById(id).subscribe((emp: Employee | undefined) => { if (emp) this.form = { ...emp }; });
     }
   }
+
+  asAny(obj: any) { return obj; }
 
   save() {
     alert(this.isEdit ? '✅ تم حفظ بيانات الموظف' : '✅ تم تسجيل الموظف بنجاح');

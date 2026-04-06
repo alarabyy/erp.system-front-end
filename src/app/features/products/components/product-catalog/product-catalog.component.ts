@@ -1,7 +1,6 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
-import { Product } from '../../models/product.model';
+import { Product } from '../../../../core/services/data-mock.service'; // Use the core model
 
 @Component({
   standalone: true,
@@ -12,4 +11,8 @@ import { Product } from '../../models/product.model';
 })
 export class ProductCatalogComponent {
   @Input() products: Product[] | null = [];
+
+  onAction(action: string, product: Product) {
+    alert(`[Inventory Action] ${action} for ${product.name} (SKU: ${product.sku})`);
+  }
 }

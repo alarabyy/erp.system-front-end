@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 interface NavItem {
   label: string;
+  icon: string;
   path?: string;
-  icon?: string;
-  badge?: string;
-  badgeType?: 'primary' | 'success' | 'warning' | 'danger';
   expanded?: boolean;
+  badge?: string;
+  iconColor?: string;
   children?: NavItem[];
-  type?: 'item' | 'header';
 }
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
@@ -25,74 +25,95 @@ export class SidebarComponent {
   filteredItems: NavItem[] = [];
 
   navItems: NavItem[] = [
-    { label: 'الرئيسية والتحليلات', type: 'header' },
-    { label: 'لوحة القيادة', path: '/dashboard', icon: '🏠' },
-    { label: 'الدردشة والتعاون', path: '/chat', icon: '💬', badge: 'جديد', badgeType: 'success' },
     {
-      label: 'التحليلات الذكية', icon: '📊', expanded: true,
+      label: 'التجارة والمبيعات',
+      icon: '🛒',
+      expanded: true,
       children: [
-        { label: 'نظرة عامة', path: '/analytics/overview', icon: '🧭' },
-        { label: 'تحليل المبيعات', path: '/analytics/sales', icon: '📈' },
-        { label: 'تحليل المخزون', path: '/analytics/inventory', icon: '📦' },
-        { label: 'التحليل المالي', path: '/analytics/financial', icon: '💰' },
-        { label: 'تحليل HR', path: '/analytics/hr', icon: '👥' },
-        { label: 'تحليل CRM', path: '/analytics/crm', icon: '❤️' },
-        { label: 'تقارير مخصصة', path: '/analytics/custom-reports', icon: '🎨', badge: 'جديد', badgeType: 'primary' },
+        { label: 'المبيعات والأوردرات', path: '/sales', icon: '🛒', iconColor: '#10b981' },
+        { label: 'المشتريات والموردين', path: '/purchases', icon: '📦', iconColor: '#f59e0b' },
+        { label: 'المخازن والأصناف', path: '/products', icon: '🏬', iconColor: '#6366f1' },
+        { label: 'إدارة العملاء CRM', path: '/crm', icon: '👥', iconColor: '#ec4899' },
+        { label: 'مدير الملفات', path: '/files', icon: '📁', iconColor: '#22c55e' }
       ]
     },
-
-    { label: 'إدارة العمليات', type: 'header' },
-    { label: 'المبيعات', path: '/sales', icon: '🛒' },
-    { label: 'المشتريات', path: '/purchases', icon: '🧾' },
-    { label: 'المخزون', path: '/inventory', icon: '📦' },
-
-    { label: 'إدارة الموارد والعملاء', type: 'header' },
-    { label: 'المستخدمون والخصوصية', path: '/users', icon: '👥' },
-    { label: 'الموارد البشرية', path: '/hr', icon: '👨‍💼' },
-    { label: 'إدارة العملاء (CRM)', path: '/crm', icon: '❤️' },
-
-    { label: 'المالية والتقارير', type: 'header' },
-    { label: 'المحاسبة والقيود', path: '/accounting', icon: '💰' },
-    { label: 'مركز التقارير', path: '/reports', icon: '📊' },
-
-    { label: 'الأتمتة والذكاء الاصطناعي', type: 'header' },
-    { label: 'الذكاء الاصطناعي', path: '/ai', icon: '🧠', badge: 'بيتا', badgeType: 'warning' },
-    { label: 'مهام سير العمل (Workflow)', path: '/workflow', icon: '🔄' },
-    { label: 'محرك القواعد والشرط', path: '/rules', icon: '⚖️' },
-    { label: 'الحقول المخصصة', path: '/custom-fields', icon: '🧱' },
-
-    { label: 'تحكم النظام والنواتج', type: 'header' },
-    { label: 'الأمان والحماية', path: '/security', icon: '🔐' },
-    { label: 'سجل الأحداث📡', path: '/events', icon: '📡' },
-    { label: 'المهام الخلفية⚡', path: '/jobs', icon: '⚡' },
-    { label: 'النسخ الاحتياطي', path: '/backup', icon: '💽' },
-    { label: 'بيئة المطورين', path: '/developers', icon: '🧑‍💻' },
-    { label: 'منشئ الواجهات', path: '/builders', icon: '🎨' },
-    { label: 'الإعدادات الأساسية', path: '/settings', icon: '⚙️' }
+    {
+      label: 'المالية والأصول',
+      icon: '💰',
+      expanded: false,
+      children: [
+        { label: 'الحسابات العامة GL', path: '/finance/ledger', icon: '📔', iconColor: '#3b82f6' },
+        { label: 'القيود المحاسبية', path: '/finance/journals', icon: '📑', iconColor: '#64748b' },
+        { label: 'إدارة الأصول الثابتة', path: '/finance/assets', icon: '🏛️', iconColor: '#f43f5e' }
+      ]
+    },
+    {
+      label: 'الإنتاج والمشاريع',
+      icon: '🏭',
+      expanded: false,
+      children: [
+        { label: 'إدارة التصنيع MRP', path: '/production/bom', icon: '⚙️', iconColor: '#334155' },
+        { label: 'أوامر الإنتاج', path: '/production/orders', icon: '🛠️', iconColor: '#475569' },
+        { label: 'إدارة المشاريع', path: '/projects/list', icon: '🏗️', iconColor: '#0ea5e9' }
+      ]
+    },
+    {
+      label: 'الموارد والأداء',
+      icon: '👤',
+      expanded: false,
+      children: [
+        { label: 'شؤون الموظفين HR', path: '/hr', icon: '👔', iconColor: '#10b981' },
+        { label: 'المستخدمين والصلاحيات', path: '/users', icon: '🔐', iconColor: '#f43f5e' },
+        { label: 'الأداء والتقييم KPI', path: '/performance', icon: '📈', iconColor: '#f59e0b' }
+      ]
+    },
+    {
+      label: 'الذكاء والأتمتة',
+      icon: '🧠',
+      expanded: false,
+      children: [
+        { label: 'ذكاء الأعمال AI', path: '/ai', icon: '✨', iconColor: '#8b5cf6' },
+        { label: 'أتمتة العمليات', path: '/automation', icon: '⚡', iconColor: '#f59e0b' },
+        { label: 'المساعد الذكي Q', path: '/chat', icon: '💬', iconColor: '#3b82f6' }
+      ]
+    },
+    {
+      label: 'التواصل والسيستم',
+      icon: '🌐',
+      expanded: false,
+      children: [
+        { label: 'الإشعارات والتنبيهات', path: '/notifications', icon: '🔔', iconColor: '#f43f5e' },
+        { label: 'الأمان والرقابة', path: '/security', icon: '🛡️', iconColor: '#0f172a' },
+        { label: 'سجلات النشاط', path: '/security/audit-logs', icon: '📑', iconColor: '#94a3b8' },
+        { label: 'إدارة النسخ الاحتياطي', path: '/backup', icon: '💾', iconColor: '#64748b' }
+      ]
+    }
   ];
 
-  constructor() {
-    this.filteredItems = [...this.navItems];
-  }
-
-  onSearch() {
-    if (!this.searchQuery) {
-      this.filteredItems = [...this.navItems];
-      return;
-    }
-    const q = this.searchQuery.toLowerCase();
-    this.filteredItems = this.navItems.filter(item => {
-      if (item.type === 'header') return false; // Don't filter out headers if they match? Actually, let's show items that match.
-      const match = item.label.toLowerCase().includes(q);
-      const childMatch = item.children?.some(c => c.label.toLowerCase().includes(q));
-      return match || childMatch;
-    });
-    // Add headers back for context if needed, but for simplicity let's just show items.
-  }
+  constructor(private router: Router) {}
 
   toggleItem(item: NavItem) {
     if (item.children) {
       item.expanded = !item.expanded;
     }
+  }
+
+  onSearch() {
+    if (!this.searchQuery) {
+      this.filteredItems = [];
+      return;
+    }
+    const q = this.searchQuery.toLowerCase();
+    this.filteredItems = [];
+    this.navItems.forEach(group => {
+      const children = (group.children || []).filter(c => c.label.toLowerCase().includes(q));
+      if (children.length > 0) {
+        this.filteredItems.push({ ...group, children, expanded: true });
+      }
+    });
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
   }
 }

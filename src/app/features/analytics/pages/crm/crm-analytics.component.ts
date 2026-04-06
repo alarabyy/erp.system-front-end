@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { DataMockService, Lead, Opportunity } from '../../../../core/services/data-mock.service';
+import { DataMockService } from '../../../../core/services/data-mock.service';
+import { Lead, Opportunity } from '../../../../core/models/data-models';
 import { Observable } from 'rxjs';
 
 @Component({

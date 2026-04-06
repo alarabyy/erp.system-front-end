@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataMockService, Notification } from '../../../../core/services/data-mock.service';
+import { DataMockService } from '../../../../core/services/data-mock.service';
+import { ErpNotification } from '../../../../core/models/data-models';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -109,7 +110,7 @@ import { Observable } from 'rxjs';
   `]
 })
 export class NotificationsPageComponent implements OnInit {
-  notifications$: Observable<Notification[]>;
+  notifications$: Observable<ErpNotification[]>;
 
   constructor(private data: DataMockService) {
     this.notifications$ = this.data.getNotifications();

@@ -1,9 +1,11 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 const TOKEN_KEY = 'ims_token';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthStateService {
   private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem(TOKEN_KEY));
   readonly token$ = this.tokenSubject.asObservable();
@@ -23,5 +25,9 @@ export class AuthStateService {
 
   isAuthenticated(): boolean {
     return !!this.token;
+  }
+
+  logout() {
+    this.setToken(null);
   }
 }

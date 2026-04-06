@@ -1,257 +1,270 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, delay, map, Observable, of } from 'rxjs';
-import { Product } from '../../features/products/models/product.model';
-export type { Product };
+import { Observable, of } from 'rxjs';
 
-// ── Interfaces ──────────────────────────────────────────────────────────────
-export interface Statistics {
-  totalRevenue: number; monthlyOrders: number; totalUsers: number;
-  lowStockAlerts: number; revenueGrowth: number; ordersGrowth: number;
-  netProfit: number; growthRate: number;
-}
-export type ActivityType = 'order'|'stock'|'supplier'|'alert'|'user'|'payment'|'system'|'backup';
-export interface Activity { id:string; type:ActivityType; message:string; time:string; user:string; amount?:number; }
-export interface User { id:string; name:string; email:string; role:'admin'|'manager'|'employee'|'viewer'; department:string; status:'active'|'inactive'; joinDate:string; avatar:string; lastLogin?:string; }
-export interface SalesOrder { id:string; orderNo:string; customer:string; date:string; total:number; status:'pending'|'confirmed'|'shipped'|'delivered'|'cancelled'; items:number; paymentStatus:'paid'|'partial'|'unpaid'; region?:string; }
-export interface Supplier { id:string; name:string; contactPerson:string; email:string; phone:string; country:string; status:'active'|'inactive'; totalOrders:number; }
-export interface PurchaseOrder { id:string; poNo:string; supplier:string; date:string; total:number; status:'draft'|'sent'|'received'|'cancelled'; items:number; }
-export interface Employee { id:string; name:string; department:string; position:string; salary:number; status:'active'|'on_leave'|'terminated'; startDate:string; email:string; attendanceRate?:number; performance?:number; }
-export interface Lead { id:string; name:string; company:string; email:string; phone:string; status:'new'|'contacted'|'qualified'|'proposal'|'won'|'lost'; value:number; source:string; }
-export interface WorkflowItem { id:string; name:string; trigger:string; status:'active'|'inactive'|'draft'; lastRun:string; runs:number; }
-export interface SecurityLog { id:string; user:string; action:string; ip:string; time:string; status:'success'|'failed'|'warning'; }
-export interface BackupRecord { id:string; name:string; size:string; date:string; type:'auto'|'manual'; status:'success'|'failed'|'running'; }
-export interface AIInsight { id:string; title:string; description:string; type:'warning'|'opportunity'|'trend'|'anomaly'; severity:'high'|'medium'|'low'; time:string; }
-export interface SystemJob { id:string; name:string; schedule:string; lastRun:string; status:'active'|'paused'|'failed'; nextRun:string; }
-export interface CustomField { id:string; name:string; label:string; type:'text'|'number'|'date'|'select'|'checkbox'; module:string; required:boolean; }
-export interface Rule { id:string; name:string; condition:string; action:string; status:'active'|'inactive'; priority:number; }
-export interface Opportunity { id:string; title:string; customer:string; value:number; stage:'discovery'|'proposal'|'negotiation'|'closed_won'|'closed_lost'; probability:number; closeDate:string; }
-export interface Invoice { id:string; invoiceNo:string; customer:string; amount:number; date:string; dueDate:string; status:'paid'|'unpaid'|'overdue'|'draft'; }
-export interface ChatMessage { id:string; senderId:string; receiverId:string; content:string; time:string; status:'sent'|'delivered'|'read'; }
-export interface Notification { id:string; title:string; message:string; time:string; type:'info'|'warning'|'success'|'danger'; read:boolean; }
+import {
+  User, Employee, Product, SalesOrder, Supplier, SecurityLog,
+  ChatMessage, Lead, Opportunity, BackupRecord, CustomField,
+  ErpNotification, Activity, AIInsight, Rule, WorkflowItem,
+  SystemJob, Statistics, LedgerAccount, JournalEntry, FixedAsset,
+  BOM, ProductionOrder, Project, ProjectTask, Goal, KPI, AutomationRule
+} from '../models/data-models';
+
+// ✅ Re-export all models so feature components can import from one file
+export { User, Employee, Product, SalesOrder, Supplier, SecurityLog } from '../models/data-models';
+export { ChatMessage, Lead, Opportunity, BackupRecord, CustomField } from '../models/data-models';
+export { Activity, AIInsight, Rule, WorkflowItem } from '../models/data-models';
+export { SystemJob, Statistics, LedgerAccount, JournalEntry, FixedAsset } from '../models/data-models';
+export { BOM, ProductionOrder, Project, ProjectTask, Goal, KPI, AutomationRule } from '../models/data-models';
+export { ErpNotification as Notification, ErpNotification } from '../models/data-models';
 
 @Injectable({ providedIn: 'root' })
 export class DataMockService {
 
-  // ── Products ─────────────────────────────────────────────────────────────
-  private _products$ = new BehaviorSubject<Product[]>([
-    { id:'1', name:'لابتوب ماك بوك برو M3', category:'أجهزة كمبيوتر', price:3499, stock:45, status:'In Stock', sku:'MAC-14-M3M' },
-    { id:'2', name:'آيفون 15 برو تيتانيوم', category:'هواتف محمولة', price:1099, stock:120, status:'In Stock', sku:'IPH-15P-L' },
-    { id:'3', name:'شاشة استوديو نانو', category:'شاشات', price:1899, stock:8, status:'Low Stock', sku:'DISP-SD-27' },
-    { id:'4', name:'سماعات إيربودز ماكس', category:'صوتيات', price:549, stock:0, status:'Out of Stock', sku:'AUD-APM-S' },
-    { id:'5', name:'آيباد برو OLED الجديد', category:'أجهزة لوحية', price:1299, stock:65, status:'In Stock', sku:'IPAD-13-M4' },
-    { id:'6', name:'لوحة مفاتيح ماجيك', category:'إكسسوارات', price:299, stock:210, status:'In Stock', sku:'ACC-MKB-F' },
-    { id:'7', name:'ساعة آبل الترا 2', category:'ساعات ذكية', price:799, stock:12, status:'Low Stock', sku:'WATCH-U2-B' },
-    { id:'8', name:'ماوس ماجيك 3', category:'إكسسوارات', price:129, stock:0, status:'Out of Stock', sku:'ACC-MM3-W' },
-  ]);
+  // ===== USERS =====
+  private users: User[] = [
+    { id: '1', name: 'أحمد محمد', email: 'ahmed@quantum.app', role: 'admin', department: 'تقنية المعلومات', status: 'active', avatar: 'أ', joinDate: '2023-01-15' },
+    { id: '2', name: 'سارة علي', email: 'sara@quantum.app', role: 'manager', department: 'المبيعات', status: 'active', avatar: 'س', joinDate: '2023-03-20' },
+    { id: '3', name: 'محمد حسن', email: 'hassan@quantum.app', role: 'employee', department: 'الموارد البشرية', status: 'active', avatar: 'م', joinDate: '2023-06-01' },
+    { id: '4', name: 'فاطمة خالد', email: 'fatima@quantum.app', role: 'accountant', department: 'المالية', status: 'inactive', avatar: 'ف', joinDate: '2022-11-10' },
+    { id: '5', name: 'عمر إبراهيم', email: 'omar@quantum.app', role: 'employee', department: 'المستودعات', status: 'active', avatar: 'ع', joinDate: '2024-02-01' },
+  ];
 
-  // ── Users ─────────────────────────────────────────────────────────────────
-  private _users$ = new BehaviorSubject<User[]>([
-    { id:'1', name:'أحمد محمد الرشيد', email:'ahmed@quantumerp.com', role:'admin', department:'تقنية المعلومات', status:'active', joinDate:'2023-01-15', avatar:'أح', lastLogin:'منذ 5 دقائق' },
-    { id:'2', name:'سارة الخليل', email:'sara@quantumerp.com', role:'manager', department:'المبيعات', status:'active', joinDate:'2023-03-20', avatar:'سا', lastLogin:'منذ ساعة' },
-    { id:'3', name:'محمد التركي', email:'turki@quantumerp.com', role:'employee', department:'المستودعات', status:'active', joinDate:'2023-06-01', avatar:'مح', lastLogin:'منذ 3 ساعات' },
-    { id:'4', name:'نورة السالم', email:'noura@quantumerp.com', role:'viewer', department:'المحاسبة', status:'inactive', joinDate:'2022-11-10', avatar:'نو', lastLogin:'منذ أسبوع' },
-    { id:'5', name:'عمر الفهد', email:'omar@quantumerp.com', role:'employee', department:'المشتريات', status:'active', joinDate:'2024-01-05', avatar:'عم', lastLogin:'منذ يوم' },
-    { id:'6', name:'ريم العبدالله', email:'reem@quantumerp.com', role:'manager', department:'الموارد البشرية', status:'active', joinDate:'2024-02-10', avatar:'ري', lastLogin:'منذ ساعتين' },
-  ]);
+  // ===== EMPLOYEES =====
+  private employees: Employee[] = [
+    { id: '1', name: 'خالد السيد', email: 'khaled@quantum.app', role: 'employee', department: 'المبيعات', status: 'active', avatar: 'خ', phone: '0501234567', position: 'مدير مبيعات', salary: 12000, startDate: '2022-06-01', performance: 92, attendanceRate: 97 },
+    { id: '2', name: 'نورا أحمد', email: 'nora@quantum.app', role: 'employee', department: 'تقنية المعلومات', status: 'active', avatar: 'ن', phone: '0509876543', position: 'مطورة قواعد بيانات', salary: 15000, startDate: '2021-09-15', performance: 88, attendanceRate: 95 },
+    { id: '3', name: 'تامر محمود', email: 'tamer@quantum.app', role: 'employee', department: 'الموارد البشرية', status: 'on_leave', avatar: 'ت', phone: '0507654321', position: 'مسؤول توظيف', salary: 9500, startDate: '2023-03-01', performance: 75, attendanceRate: 85 },
+    { id: '4', name: 'ريم عبدالله', email: 'reem@quantum.app', role: 'employee', department: 'المالية', status: 'active', avatar: 'ر', phone: '0502345678', position: 'محاسبة رئيسية', salary: 11000, startDate: '2020-01-10', performance: 95, attendanceRate: 99 },
+    { id: '5', name: 'بلال يوسف', email: 'bilal@quantum.app', role: 'employee', department: 'التسويق', status: 'active', avatar: 'ب', phone: '0503456789', position: 'مدير تسويق رقمي', salary: 13000, startDate: '2022-11-20', performance: 80, attendanceRate: 91 },
+  ];
 
-  // ── Sales Orders ──────────────────────────────────────────────────────────
-  private _orders$ = new BehaviorSubject<SalesOrder[]>([
-    { id:'1', orderNo:'ORD-2026-0081', customer:'شركة تك نيكسوس', date:'2026-04-01', total:45600, status:'delivered', items:5, paymentStatus:'paid', region:'الرياض' },
-    { id:'2', orderNo:'ORD-2026-0082', customer:'مؤسسة الرقم الذكي', date:'2026-04-03', total:12400, status:'shipped', items:2, paymentStatus:'paid', region:'جدة' },
-    { id:'3', orderNo:'ORD-2026-0083', customer:'مجموعة الأفق للتجارة', date:'2026-04-04', total:8900, status:'confirmed', items:3, paymentStatus:'partial', region:'الدمام' },
-    { id:'4', orderNo:'ORD-2026-0084', customer:'شركة النخبة للإلكترونيات', date:'2026-04-05', total:31500, status:'pending', items:7, paymentStatus:'unpaid', region:'أبوظبي' },
-    { id:'5', orderNo:'ORD-2026-0085', customer:'مؤسسة الحلول التقنية', date:'2026-04-05', total:6700, status:'cancelled', items:1, paymentStatus:'unpaid', region:'دبي' },
-    { id:'6', orderNo:'ORD-2026-0086', customer:'شركة المستقبل الرقمي', date:'2026-04-06', total:22800, status:'confirmed', items:4, paymentStatus:'paid', region:'الرياض' },
-    { id:'7', orderNo:'ORD-2026-0087', customer:'مجموعة البيان التجارية', date:'2026-04-06', total:15300, status:'pending', items:3, paymentStatus:'unpaid', region:'الكويت' },
-  ]);
+  // ===== PRODUCTS =====
+  private products: Product[] = [
+    { id: '1', name: 'آيفون 15 برو ماكس', sku: 'APPL-001', category: 'إلكترونيات', price: 5999, stock: 150, status: 'active', performance: 95 },
+    { id: '2', name: 'سامسونج S24 ألترا', sku: 'SAM-002', category: 'إلكترونيات', price: 4499, stock: 89, status: 'active', performance: 87 },
+    { id: '3', name: 'ماك بوك برو M3', sku: 'APPL-003', category: 'حواسيب', price: 9999, stock: 45, status: 'active', performance: 91 },
+    { id: '4', name: 'سماعات سوني WH-1000XM5', sku: 'SONY-004', category: 'صوتيات', price: 1299, stock: 0, status: 'out_of_stock', performance: 78 },
+    { id: '5', name: 'آيباد برو OLED', sku: 'APPL-005', category: 'إلكترونيات', price: 4199, stock: 210, status: 'active', performance: 83 },
+    { id: '6', name: 'شاشة LG OLED 4K', sku: 'LG-006', category: 'شاشات', price: 3200, stock: 30, status: 'active', performance: 72 },
+  ];
 
-  // ── Suppliers ──────────────────────────────────────────────────────────────
-  private _suppliers$ = new BehaviorSubject<Supplier[]>([
-    { id:'1', name:'الشركة العالمية للتقنية', contactPerson:'يوسف العلي', email:'yousuf@globaltech.com', phone:'+966 50 123 4567', country:'السعودية', status:'active', totalOrders:48 },
-    { id:'2', name:'مورد الخليج للإلكترونيات', contactPerson:'فاطمة حسن', email:'fatima@gulfsupply.com', phone:'+971 55 987 6543', country:'الإمارات', status:'active', totalOrders:32 },
-    { id:'3', name:'شركة الإمداد الذكي', contactPerson:'خالد النباتي', email:'khalid@smartsupply.com', phone:'+965 99 456 7890', country:'الكويت', status:'inactive', totalOrders:15 },
-    { id:'4', name:'مؤسسة التقنيات المتطورة', contactPerson:'منى العتيبي', email:'mona@advtech.com', phone:'+966 55 654 3210', country:'السعودية', status:'active', totalOrders:27 },
-  ]);
+  // ===== SALES ORDERS =====
+  private salesOrders: SalesOrder[] = [
+    { id: '1', orderNo: 'ORD-2024-001', customer: 'شركة تك نيكسوس', date: '2024-12-01', total: 45600, items: 12, status: 'delivered', paymentStatus: 'paid', region: 'الرياض' },
+    { id: '2', orderNo: 'ORD-2024-002', customer: 'المستقبل الرقمي', date: '2024-12-03', total: 22800, items: 7, status: 'processing', paymentStatus: 'pending', region: 'جدة' },
+    { id: '3', orderNo: 'ORD-2024-003', customer: 'مؤسسة الرقم الذكي', date: '2024-12-05', total: 12400, items: 3, status: 'shipped', paymentStatus: 'partial', region: 'الدمام' },
+    { id: '4', orderNo: 'ORD-2024-004', customer: 'نورا التجارية', date: '2024-12-08', total: 8900, items: 5, status: 'pending', paymentStatus: 'pending', region: 'الرياض' },
+    { id: '5', orderNo: 'ORD-2024-005', customer: 'البيان للتقنية', date: '2024-12-10', total: 33700, items: 9, status: 'cancelled', paymentStatus: 'refunded', region: 'جدة' },
+  ];
 
-  // ── Employees ─────────────────────────────────────────────────────────────
-  private _employees$ = new BehaviorSubject<Employee[]>([
-    { id:'1', name:'أحمد الرشيد', department:'تقنية المعلومات', position:'مطور برمجيات', salary:12500, status:'active', startDate:'2023-01-15', email:'ahmed@quantumerp.com', attendanceRate:96, performance:92 },
-    { id:'2', name:'سارة الخليل', department:'المبيعات', position:'مديرة مبيعات', salary:9800, status:'active', startDate:'2023-03-20', email:'sara@quantumerp.com', attendanceRate:98, performance:95 },
-    { id:'3', name:'محمد التركي', department:'المستودعات', position:'مشرف مستودع', salary:6500, status:'on_leave', startDate:'2023-06-01', email:'turki@quantumerp.com', attendanceRate:82, performance:78 },
-    { id:'4', name:'ليلى المطيري', department:'الموارد البشرية', position:'مسؤولة HR', salary:7800, status:'active', startDate:'2022-09-12', email:'layla@quantumerp.com', attendanceRate:99, performance:91 },
-    { id:'5', name:'خالد العمري', department:'المحاسبة', position:'محاسب أول', salary:8400, status:'active', startDate:'2023-08-01', email:'khalid@quantumerp.com', attendanceRate:94, performance:88 },
-    { id:'6', name:'ريم العبدالله', department:'المبيعات', position:'مندوب مبيعات', salary:5800, status:'active', startDate:'2024-02-10', email:'reem@quantumerp.com', attendanceRate:91, performance:85 },
-  ]);
+  // ===== SUPPLIERS =====
+  private suppliers: Supplier[] = [
+    { id: '1', name: 'أبل العربية', contactPerson: 'عمر الحسن', email: 'omar@apple-ar.com', phone: '0501112222', category: 'إلكترونيات', country: 'السعودية', totalOrders: 145, status: 'active' },
+    { id: '2', name: 'سامسونج الخليج', contactPerson: 'ليلى أحمد', email: 'leila@samsung-gulf.com', phone: '0502223333', category: 'إلكترونيات', country: 'الإمارات', totalOrders: 89, status: 'active' },
+    { id: '3', name: 'سوني العالمية', contactPerson: 'كريم يوسف', email: 'karim@sony-int.com', phone: '0503334444', category: 'صوتيات', country: 'الكويت', totalOrders: 52, status: 'active' },
+    { id: '4', name: 'إل جي الشرق الأوسط', contactPerson: 'فريدة عبدالله', email: 'farida@lg-me.com', phone: '0504445555', category: 'شاشات', country: 'البحرين', totalOrders: 37, status: 'inactive' },
+  ];
 
-  // ── Leads & Opportunities ─────────────────────────────────────────────────
-  private _leads$ = new BehaviorSubject<Lead[]>([
-    { id:'1', name:'طارق السويدي', company:'مجموعة الأفق', email:'tariq@ufq.com', phone:'+966501234', status:'qualified', value:85000, source:'موقع إلكتروني' },
-    { id:'2', name:'منى العتيبي', company:'شركة النخبة', email:'mona@elite.com', phone:'+971551234', status:'proposal', value:140000, source:'معرض تجاري' },
-    { id:'3', name:'عبدالله القحطاني', company:'تك فيجن', email:'abdo@techvision.com', phone:'+965991234', status:'new', value:45000, source:'إحالة عميل' },
-    { id:'4', name:'هند الشمري', company:'ديجيتال برو', email:'hind@digitalpro.com', phone:'+966551234', status:'won', value:220000, source:'حملة تسويقية' },
-    { id:'5', name:'يونس الأحمدي', company:'سمارت سولوشنز', email:'younis@smart.com', phone:'+966501111', status:'contacted', value:68000, source:'معرض تجاري' },
-    { id:'6', name:'دانا الحربي', company:'تك أكاديمي', email:'dana@techacademy.com', phone:'+966551122', status:'lost', value:32000, source:'موقع إلكتروني' },
-  ]);
+  // ===== LEADS =====
+  private leads: Lead[] = [
+    { id: '1', name: 'محمد الشهراني', company: 'شركة الفجر للتقنية', email: 'm.shahrani@alfajr.com', phone: '0512345678', value: 85000, source: 'موقع إلكتروني', status: 'hot' },
+    { id: '2', name: 'أميرة الحربي', company: 'الحربي للاستشارات', email: 'a.harbi@consult.com', phone: '0523456789', value: 42000, source: 'مؤتمر', status: 'warm' },
+    { id: '3', name: 'فهد العتيبي', company: 'العتيبي للتوزيع', email: 'f.otaibi@dist.com', phone: '0534567890', value: 120000, source: 'إحالة', status: 'hot' },
+    { id: '4', name: 'نادية السالم', company: 'مجموعة السالم', email: 'n.salem@salimgroup.com', phone: '0545678901', value: 29000, source: 'حملة إعلانية', status: 'cold' },
+  ];
 
-  private _opportunities$ = new BehaviorSubject<Opportunity[]>([
-    { id:'1', title:'عقد تطوير نظام ERP', customer:'شركة تك نيكسوس', value:320000, stage:'negotiation', probability:75, closeDate:'2026-05-15' },
-    { id:'2', title:'توريد أجهزة شبكات', customer:'مجموعة الأفق', value:185000, stage:'proposal', probability:50, closeDate:'2026-06-01' },
-    { id:'3', title:'صيانة سنوية شاملة', customer:'النخبة للإلكترونيات', value:72000, stage:'closed_won', probability:100, closeDate:'2026-04-01' },
-    { id:'4', title:'ترخيص برامج Microsoft', customer:'ديجيتال برو', value:48000, stage:'discovery', probability:30, closeDate:'2026-07-01' },
-  ]);
+  // ===== OPPORTUNITIES =====
+  private opportunities: Opportunity[] = [
+    { id: '1', title: 'عقد توريد أجهزة تقنية 2025', customer: 'شركة تك نيكسوس', stage: 'proposal', closeDate: '2025-02-28', value: 250000, probability: 75, status: 'open' },
+    { id: '2', title: 'تحديث منظومة الحواسيب', customer: 'البيان للتقنية', stage: 'negotiation', closeDate: '2025-01-31', value: 180000, probability: 60, status: 'open' },
+    { id: '3', title: 'توريد شاشات لمشروع المطار', customer: 'مؤسسة الرقم الذكي', stage: 'closed_won', closeDate: '2024-12-15', value: 320000, probability: 100, status: 'won' },
+    { id: '4', title: 'تجهيز قاعة اجتماعات', customer: 'الحربي للاستشارات', stage: 'discovery', closeDate: '2025-03-15', value: 55000, probability: 30, status: 'open' },
+  ];
 
-  private _invoices$ = new BehaviorSubject<Invoice[]>([
-    { id:'1', invoiceNo:'INV-2026-0041', customer:'شركة تك نيكسوس', amount:45600, date:'2026-04-01', dueDate:'2026-05-01', status:'paid' },
-    { id:'2', invoiceNo:'INV-2026-0042', customer:'مؤسسة الرقم الذكي', amount:12400, date:'2026-04-03', dueDate:'2026-05-03', status:'paid' },
-    { id:'3', invoiceNo:'INV-2026-0043', customer:'مجموعة الأفق', amount:8900, date:'2026-04-04', dueDate:'2026-05-04', status:'unpaid' },
-    { id:'4', invoiceNo:'INV-2026-0044', customer:'النخبة للإلكترونيات', amount:31500, date:'2026-04-05', dueDate:'2026-04-20', status:'overdue' },
-    { id:'5', invoiceNo:'INV-2026-0045', customer:'مؤسسة الحلول التقنية', amount:6700, date:'2026-04-05', dueDate:'2026-05-05', status:'draft' },
-  ]);
+  // ===== NOTIFICATIONS =====
+  private notifications: ErpNotification[] = [
+    { id: '1', title: 'طلب شراء جديد', message: 'تم استلام طلب شراء جديد بقيمة 45,600 ريال من شركة تك نيكسوس', time: 'منذ 5 دقائق', read: false, type: 'info' },
+    { id: '2', title: 'تحذير: مخزون منخفض', message: 'سماعات سوني WH-1000XM5 نفدت من المخزون! يرجى رفع طلب توريد فوري', time: 'منذ 22 دقيقة', read: false, type: 'warning' },
+    { id: '3', title: 'تمت عملية بيع بنجاح', message: 'تم شحن الطلب ORD-2024-003 وتسليمه للعميل بنجاح', time: 'منذ ساعة', read: true, type: 'success' },
+    { id: '4', title: 'صلاحية انتهت', message: 'انتهت صلاحية مستخدم فاطمة خالد. يلزم تجديد الحساب', time: 'منذ 3 ساعات', read: true, type: 'danger' },
+    { id: '5', title: 'تقرير شهري جاهز', message: 'تم إنشاء التقرير المالي لشهر ديسمبر 2024. اضغط للمراجعة', time: 'اليوم الساعة 9:00 ص', read: true, type: 'info' },
+  ];
 
-  private _workflows$ = new BehaviorSubject<WorkflowItem[]>([
-    { id:'1', name:'إشعار عند انخفاض المخزون', trigger:'مخزون < 10', status:'active', lastRun:'منذ ساعة', runs:142 },
-    { id:'2', name:'إرسال فاتورة تلقائية', trigger:'عند تسليم الطلب', status:'active', lastRun:'منذ 3 ساعات', runs:89 },
-    { id:'3', name:'تذكير بمتابعة العملاء', trigger:'بعد 3 أيام من التواصل', status:'inactive', lastRun:'منذ أسبوع', runs:34 },
-    { id:'4', name:'تقرير يومي للمبيعات', trigger:'يومياً الساعة 6م', status:'active', lastRun:'منذ يوم', runs:218 },
-    { id:'5', name:'اعتماد الطلبات الكبيرة', trigger:'قيمة الطلب > $10,000', status:'draft', lastRun:'لم يُفعّل بعد', runs:0 },
-  ]);
+  // ===== ACTIVITIES =====
+  private activities: Activity[] = [
+    { id: '1', type: 'order', message: 'طلب جديد من شركة تك نيكسوس بقيمة 45,600 ريال', time: 'منذ 5 دقائق', user: 'أحمد محمد', amount: 45600 },
+    { id: '2', type: 'stock', message: 'تحديث مخزون آيفون 15 برو ماكس — تمت إضافة 50 قطعة', time: 'منذ 18 دقيقة', user: 'عمر إبراهيم' },
+    { id: '3', type: 'user', message: 'تسجيل دخول مشبوه من عنوان IP جديد — تم تأمين الحساب', time: 'منذ 35 دقيقة', user: 'النظام' },
+    { id: '4', type: 'order', message: 'شحن طلب ORD-2024-003 لمؤسسة الرقم الذكي', time: 'منذ ساعة', user: 'سارة علي', amount: 12400 },
+    { id: '5', type: 'system', message: 'اكتملت نسخة احتياطية تلقائية للنظام بنجاح', time: 'منذ 2 ساعة', user: 'النظام' },
+    { id: '6', type: 'order', message: 'إلغاء طلب ORD-2024-005 وإعادة المبلغ للعميل', time: 'منذ 3 ساعات', user: 'محمد حسن', amount: 33700 },
+  ];
 
-  private _hrEmployees$ = new BehaviorSubject<any[]>([
-    { id:'1', name:'أحمد الرشيد', role:'مدير النظام', department:'الإدارة', email:'ahmed@luxe.com', phone:'0501234567', status:'active', joinDate:'2023-01-15' },
-    { id:'2', name:'سارة محمود', role:'محاسب رئيسي', department:'المالية', email:'sara@luxe.com', phone:'0507654321', status:'active', joinDate:'2023-03-10' },
-    { id:'3', name:'محمد علي', role:'مدير مبيعات', department:'المبيعات', email:'mohamed@luxe.com', phone:'0501112223', status:'active', joinDate:'2023-02-20' },
-    { id:'4', name:'ليلى خالد', role:'مدير مستودع', department:'المخزون', email:'layla@luxe.com', phone:'0504445556', status:'active', joinDate:'2023-05-12' },
-    { id:'5', name:'ياسين جمال', role:'موظف دعم', department:'الخدمات', email:'yassin@luxe.com', phone:'0509988776', status:'on_leave', joinDate:'2024-01-05' },
-  ]);
+  // ===== AI INSIGHTS =====
+  private aiInsights: AIInsight[] = [
+    { id: '1', title: 'فرصة بيع مرتفعة الأولوية', description: 'الطلب على آيفون 15 ارتفع 40% هذا الأسبوع — ينصح برفع المخزون وإطلاق حملة ترويجية فورية', impact: 'high', type: 'opportunity', severity: 'high', time: 'اليوم 10:00 ص' },
+    { id: '2', title: 'انحراف في المصروفات', description: 'مصروفات قسم التسويق تجاوزت الميزانية الشهرية بنسبة 18% — يُنصح بمراجعة بنود الإنفاق', impact: 'medium', type: 'warning', severity: 'medium', time: 'الأمس 3:00 م' },
+    { id: '3', title: 'نمو المبيعات — اتجاه ممتاز', description: 'الإيرادات في اتجاه تصاعدي بمعدل 12.4% مقارنة بالشهر الماضي — أفضل أداء في 2024', impact: 'positive', type: 'trend', severity: 'low', time: 'قبل يومين' },
+    { id: '4', title: 'خطر في سلسلة التوريد', description: 'أحد الموردين الرئيسيين تأخر في 3 توريدات متتالية — يُوصى بتفعيل مورد بديل', impact: 'high', type: 'warning', severity: 'high', time: 'قبل 3 أيام' },
+  ];
 
-  private _accountingEntries$ = new BehaviorSubject<any[]>([
-    { id:'1', date:'2024-04-01', description:'فاتورة مبيعات #1001', debit:5400, credit:0, account:'المبيعات' },
-    { id:'2', date:'2024-04-02', description:'شراء أصول ثابتة - أجهزة', debit:0, credit:12000, account:'الأصول' },
-    { id:'3', date:'2024-04-03', description:'رواتب شهر مارس', debit:0, credit:45000, account:'المصاريف' },
-    { id:'4', date:'2024-04-04', description:'عمولة بيع #1002', debit:800, credit:0, account:'العمولات' },
-    { id:'5', date:'2024-04-05', description:'تسوية بنكية', debit:200, credit:0, account:'البنك' },
-  ]);
+  // ===== BACKUPS =====
+  private backups: BackupRecord[] = [
+    { id: '1', name: 'قاعدة البيانات الرئيسية', date: '2024-12-10 02:00', size: '4.2 GB', status: 'success', type: 'auto' },
+    { id: '2', name: 'ملفات النظام والإعدادات', date: '2024-12-09 02:00', size: '1.1 GB', status: 'success', type: 'auto' },
+    { id: '3', name: 'نسخة يدوية - قبل التحديث', date: '2024-12-08 14:30', size: '3.8 GB', status: 'success', type: 'manual' },
+    { id: '4', name: 'نسخة احتياطية أسبوعية', date: '2024-12-07 02:00', size: '4.0 GB', status: 'failed', type: 'auto' },
+  ];
 
-  private _securityLogs$ = new BehaviorSubject<SecurityLog[]>([
-    { id:'1', user:'أحمد الرشيد', action:'تسجيل دخول', ip:'192.168.1.101', time:'2026-04-05 08:22', status:'success' },
-    { id:'2', user:'مجهول', action:'محاولة دخول فاشلة', ip:'185.220.101.42', time:'2026-04-05 07:45', status:'failed' },
-    { id:'3', user:'سارة الخليل', action:'حذف سجل مبيعات', ip:'192.168.1.105', time:'2026-04-04 16:30', status:'warning' },
-    { id:'4', user:'عمر الفهد', action:'تعديل إعدادات النظام', ip:'192.168.1.110', time:'2026-04-04 14:15', status:'success' },
-    { id:'5', user:'مجهول', action:'محاولة اختراق API', ip:'103.21.244.0', time:'2026-04-04 02:11', status:'failed' },
-  ]);
+  // ===== CUSTOM FIELDS =====
+  private customFields: CustomField[] = [
+    { id: '1', name: 'customer_vip', type: 'boolean', module: 'crm', label: 'عميل VIP', required: false },
+    { id: '2', name: 'product_origin', type: 'text', module: 'inventory', label: 'بلد المنشأ', required: true },
+    { id: '3', name: 'order_priority', type: 'select', module: 'sales', label: 'أولوية الطلب', required: false },
+    { id: '4', name: 'employee_badge', type: 'number', module: 'hr', label: 'رقم الشارة', required: true },
+  ];
 
-  private _backups$ = new BehaviorSubject<BackupRecord[]>([
-    { id:'1', name:'نسخة احتياطية كاملة - أبريل', size:'2.4 GB', date:'2026-04-05 02:00', type:'auto', status:'success' },
-    { id:'2', name:'نسخة يدوية قبل التحديث', size:'2.1 GB', date:'2026-04-04 18:00', type:'manual', status:'success' },
-    { id:'3', name:'نسخة احتياطية كاملة - مارس', size:'1.9 GB', date:'2026-04-01 02:00', type:'auto', status:'success' },
-    { id:'4', name:'نسخة تجريبية', size:'0.3 GB', date:'2026-03-28 10:00', type:'manual', status:'failed' },
-  ]);
+  // ===== SYSTEM JOBS =====
+  private jobs: SystemJob[] = [
+    { id: '1', title: 'نسخ احتياطي', status: 'active', progress: 100, name: 'backup_daily', schedule: 'يومياً 2:00 ص', lastRun: '2024-12-10 02:00', nextRun: '2024-12-11 02:00' },
+    { id: '2', title: 'إرسال تقارير', status: 'active', progress: 100, name: 'report_weekly', schedule: 'أسبوعياً الأحد', lastRun: '2024-12-08 08:00', nextRun: '2024-12-15 08:00' },
+    { id: '3', title: 'تنظيف الكاش', status: 'running', progress: 65, name: 'cache_clear', schedule: 'يومياً 3:00 ص', lastRun: '2024-12-10 03:00', nextRun: '2024-12-11 03:00' },
+    { id: '4', title: 'مزامنة المخزون', status: 'idle', progress: 0, name: 'inventory_sync', schedule: 'كل 6 ساعات', lastRun: '2024-12-10 12:00', nextRun: '2024-12-10 18:00' },
+  ];
 
-  private _aiInsights$ = new BehaviorSubject<AIInsight[]>([
-    { id:'1', title:'نمو غير متوقع في مبيعات الهواتف', description:'زيادة 34% في مبيعات قسم الهواتف مقارنة بالشهر الماضي. يُنصح بزيادة المخزون.', type:'trend', severity:'medium', time:'منذ ساعتين' },
-    { id:'2', title:'تحذير: انخفاض حاد في مخزون 3 أصناف', description:'شاشة استوديو وسماعات إيربودز وساعة آبل ستنفد خلال 7 أيام بناءً على معدل المبيعات الحالي.', type:'warning', severity:'high', time:'منذ 5 ساعات' },
-    { id:'3', title:'فرصة بيع: عميل محتمل عالي القيمة', description:'شركة تك نيكسوس تتصفح منتجات الفئة A بشكل متكرر. يُنصح بالتواصل الفوري.', type:'opportunity', severity:'high', time:'منذ يوم' },
-    { id:'4', title:'شذوذ في نمط المشتريات', description:'ارتفاع غير مبرر في تكاليف الشراء من مورد رقم 3 بنسبة 22%. يُنصح بالمراجعة.', type:'anomaly', severity:'medium', time:'منذ يومين' },
-  ]);
+  // ===== SECURITY LOGS =====
+  private securityLogs: SecurityLog[] = [
+    { id: '1', user: 'أحمد محمد', action: 'تسجيل دخول ناجح', ip: '192.168.1.10', time: '2024-12-10 09:15', status: 'success' },
+    { id: '2', user: 'مجهول', action: 'محاولة دخول فاشلة', ip: '203.40.25.111', time: '2024-12-10 08:42', status: 'failed' },
+    { id: '3', user: 'سارة علي', action: 'تعديل صلاحيات مستخدم', ip: '192.168.1.15', time: '2024-12-09 14:30', status: 'warning' },
+    { id: '4', user: 'فاطمة خالد', action: 'تصدير بيانات مالية', ip: '192.168.1.22', time: '2024-12-09 11:00', status: 'success' },
+  ];
 
-  private _jobs$ = new BehaviorSubject<SystemJob[]>([
-    { id:'1', name:'نسخ احتياطي تلقائي', schedule:'يومياً 02:00 ص', lastRun:'2026-04-05 02:00', status:'active', nextRun:'2026-04-06 02:00' },
-    { id:'2', name:'تحديث تقارير المبيعات', schedule:'كل ساعة', lastRun:'2026-04-05 05:00', status:'active', nextRun:'2026-04-05 06:00' },
-    { id:'3', name:'تنظيف سجلات النظام', schedule:'أسبوعياً الأحد', lastRun:'2026-03-30 03:00', status:'active', nextRun:'2026-04-06 03:00' },
-    { id:'4', name:'مزامنة البيانات الخارجية', schedule:'يومياً 06:00 ص', lastRun:'2026-04-04 06:00', status:'failed', nextRun:'2026-04-05 06:00' },
-    { id:'5', name:'إرسال تقارير الأداء', schedule:'شهرياً أول يوم', lastRun:'2026-04-01 08:00', status:'paused', nextRun:'2026-05-01 08:00' },
-  ]);
+  // ===== LEDGER ACCOUNTS =====
+  private accounts: LedgerAccount[] = [
+    { id: '1', code: '1010', name: 'الصندوق النقدي', type: 'asset', balance: 125000, status: 'active' },
+    { id: '2', code: '1020', name: 'حساب البنك الرئيسي', type: 'asset', balance: 850000, status: 'active' },
+    { id: '3', code: '2010', name: 'حسابات الموردين', type: 'liability', balance: 340000, status: 'active' },
+    { id: '4', code: '3010', name: 'رأس المال', type: 'equity', balance: 1200000, status: 'active' },
+    { id: '5', code: '4010', name: 'إيرادات المبيعات', type: 'income', balance: 650000, status: 'active' },
+    { id: '6', code: '5010', name: 'مصروفات التشغيل', type: 'expense', balance: 275000, status: 'active' },
+  ];
 
-  private _customFields$ = new BehaviorSubject<CustomField[]>([
-    { id:'1', name:'customer_priority', label:'أولوية العميل', type:'select', module:'المبيعات', required:false },
-    { id:'2', name:'product_origin', label:'بلد المنشأ', type:'text', module:'المخزون', required:true },
-    { id:'3', name:'employee_badge', label:'رقم الشارة', type:'number', module:'الموارد البشرية', required:true },
-    { id:'4', name:'lead_budget', label:'الميزانية التقديرية', type:'number', module:'CRM', required:false },
-    { id:'5', name:'product_warranty', label:'تاريخ انتهاء الضمان', type:'date', module:'المخزون', required:false },
-  ]);
+  // ===== BOMs =====
+  private boms: BOM[] = [
+    { id: '1', product: 'كرسي مكتبي برو', code: 'BOM-CH-01', version: '1.2', components: [{ item: 'قماش جلدي', quantity: 2, unit: 'متر' }, { item: 'إسفنج عالي الكثافة', quantity: 1, unit: 'كجم' }], status: 'active' },
+    { id: '2', product: 'طاولة اجتماعات كبيرة', code: 'BOM-TB-02', version: '2.0', components: [{ item: 'خشب MDF', quantity: 4, unit: 'لوح' }, { item: 'قواعد معدنية', quantity: 4, unit: 'قطعة' }], status: 'active' },
+  ];
 
-  private _rules$ = new BehaviorSubject<Rule[]>([
-    { id:'1', name:'تنبيه المخزون المنخفض', condition:'stock < 10', action:'إرسال إشعار للمدير', status:'active', priority:1 },
-    { id:'2', name:'خصم العملاء المميزين', condition:'total_orders > 10', action:'تطبيق خصم 5%', status:'active', priority:2 },
-    { id:'3', name:'حجب الطلبات الكبيرة', condition:'order_value > $50,000', action:'طلب موافقة مدير', status:'active', priority:3 },
-    { id:'4', name:'تنبيه الفواتير المتأخرة', condition:'due_date < today', action:'إرسال تذكير للعميل', status:'inactive', priority:4 },
-  ]);
+  // ===== PROJECTS =====
+  private projects: Project[] = [
+    { id: '1', name: 'تطوير تطبيق الجوال', client: 'شركة تك نيكسوس', manager: 'سارة علي', budget: 150000, startDate: '2024-05-01', endDate: '2025-03-31', progress: 68, status: 'ongoing' },
+    { id: '2', name: 'إعادة هيكلة شبكة الاتصالات', client: 'البيان للتقنية', manager: 'نورا أحمد', budget: 85000, startDate: '2024-09-01', endDate: '2025-01-31', progress: 90, status: 'ongoing' },
+    { id: '3', name: 'إطلاق البوابة الإلكترونية', client: 'الحربي للاستشارات', manager: 'أحمد محمد', budget: 42000, startDate: '2024-03-01', endDate: '2024-11-30', progress: 100, status: 'completed' },
+  ];
 
-  private _chatHistory$ = new BehaviorSubject<ChatMessage[]>([
-    { id:'1', senderId:'2', receiverId:'1', content:'مرحباً أحمد، هل راجعت تقرير مبيعات الربع الأول؟', time:'09:12 ص', status:'read' },
-    { id:'2', senderId:'1', receiverId:'2', content:'أهلاً سارة، نعم جاري العمل عليه الآن. سأرسله لك قريباً.', time:'09:15 ص', status:'read' },
-    { id:'3', senderId:'5', receiverId:'1', content:'أحمد، هناك نقص في مخزون الماك بوك برو في مستودع جدة.', time:'أمس', status:'read' },
-    { id:'4', senderId:'1', receiverId:'5', content:'شكراً للتنبيه عمر، سأقوم بعمل أمر شراء جديد للمورد فوراً.', time:'أمس', status:'read' },
-    { id:'5', senderId:'6', receiverId:'1', content:'أهلاً م. أحمد، نحتاج لاعتماد كشف الرواتب لشهر أبريل.', time:'اليوم', status:'delivered' },
-  ]);
+  // ===== RULES =====
+  private rules: Rule[] = [
+    { id: '1', name: 'تنبيه مخزون منخفض', description: 'إرسال إشعار عند انخفاض المخزون دون 10 وحدات', isActive: true, priority: 'high', condition: 'stock < 10', action: 'send_notification', status: 'active' },
+    { id: '2', name: 'خصم العملاء المميزين', description: 'تطبيق خصم 15% على طلبات العملاء VIP', isActive: true, priority: 'medium', condition: 'customer.vip === true', action: 'apply_discount', status: 'active' },
+    { id: '3', name: 'تجميد حسابات غير نشطة', description: 'إيقاف الحسابات غير النشطة لأكثر من 90 يوم', isActive: false, priority: 'low', condition: 'last_login > 90days', action: 'suspend_account', status: 'inactive' },
+  ];
 
-  private _notifications$ = new BehaviorSubject<Notification[]>([
-    { id:'1', title:'طلب شراء جديد', message:'قام عمر بإنشاء طلب شراء لـ 50 وحدة ماك بوك.', time:'منذ 5 دقائق', type:'info', read:false },
-    { id:'2', title:'مخزون منخفض', message:'وصل مخزون آيفون 15 برو إلى الحد الأدنى (5 قطع).', time:'منذ ساعة', type:'warning', read:false },
-    { id:'3', title:'تم التحميل بنجاح', message:'تم الانتهاء من النسخ الاحتياطي اليومي.', time:'منذ ساعتين', type:'success', read:true },
-  ]);
+  // ===== WORKFLOWS =====
+  private workflows: WorkflowItem[] = [
+    { id: '1', name: 'الموافقة على طلبات الشراء', stage: 'المراجعة المالية', priority: 'high', trigger: 'طلب شراء > 10,000 ريال', status: 'active', lastRun: '2024-12-10', runs: 24 },
+    { id: '2', name: 'إعداد ترحيب موظف جديد', stage: 'مكتمل', priority: 'medium', trigger: 'تعيين موظف جديد', status: 'active', lastRun: '2024-12-09', runs: 12 },
+    { id: '3', name: 'متابعة العملاء المتأخرين', stage: 'الإرسال التلقائي', priority: 'high', trigger: 'فاتورة متأخرة > 30 يوم', status: 'active', lastRun: '2024-12-10', runs: 87 },
+  ];
 
-  // ── Observable Getters ────────────────────────────────────────────────────
-  getProducts(): Observable<Product[]> { return this._products$.asObservable().pipe(delay(500)); }
-  getUsers(): Observable<User[]> { return this._users$.asObservable().pipe(delay(500)); }
-  getSalesOrders(): Observable<SalesOrder[]> { return this._orders$.asObservable().pipe(delay(500)); }
-  getSuppliers(): Observable<Supplier[]> { return this._suppliers$.asObservable().pipe(delay(500)); }
-  getEmployees(): Observable<Employee[]> { return this._employees$.asObservable().pipe(delay(500)); }
-  getLeads(): Observable<Lead[]> { return this._leads$.asObservable().pipe(delay(500)); }
-  getOpportunities(): Observable<Opportunity[]> { return this._opportunities$.asObservable().pipe(delay(500)); }
-  getInvoices(): Observable<Invoice[]> { return this._invoices$.asObservable().pipe(delay(500)); }
-  getWorkflows(): Observable<WorkflowItem[]> { return this._workflows$.asObservable().pipe(delay(500)); }
-  getSecurityLogs(): Observable<SecurityLog[]> { return this._securityLogs$.asObservable().pipe(delay(500)); }
-  getBackups(): Observable<BackupRecord[]> { return this._backups$.asObservable().pipe(delay(500)); }
-  getAIInsights(): Observable<AIInsight[]> { return this._aiInsights$.asObservable().pipe(delay(500)); }
-  getJobs(): Observable<SystemJob[]> { return this._jobs$.asObservable().pipe(delay(500)); }
-  getCustomFields(): Observable<CustomField[]> { return this._customFields$.asObservable().pipe(delay(500)); }
-  getRules(): Observable<Rule[]> { return this._rules$.asObservable().pipe(delay(500)); }
+  // ===== ASSETS =====
+  private assets: FixedAsset[] = [
+    { id: '1', name: 'لابتوب ماك بوك برو M3', category: 'أجهزة حاسوب', purchaseDate: '2024-01-15', cost: 9999, currentValue: 8500, location: 'مكتب التقنية', custodian: 'نورا أحمد' },
+    { id: '2', name: 'خادم HP ProLiant Gen11', category: 'خوادم', purchaseDate: '2023-06-01', cost: 45000, currentValue: 38000, location: 'غرفة الخوادم', custodian: 'أحمد محمد' },
+    { id: '3', name: 'سيارة تويوتا لاند كروزر', category: 'مركبات', purchaseDate: '2022-09-20', cost: 280000, currentValue: 220000, location: 'الموقف الرئيسي', custodian: 'محمد حسن' },
+  ];
 
-  getProductById(id: string): Observable<Product | undefined> { return of(this._products$.value.find(p => p.id === id)).pipe(delay(300)); }
-  getUserById(id: string): Observable<User | undefined> { return of(this._users$.value.find(u => u.id === id)).pipe(delay(300)); }
-  getSalesOrderById(id: string): Observable<SalesOrder | undefined> { return of(this._orders$.value.find(o => o.id === id)).pipe(delay(300)); }
-  getEmployeeById(id: string): Observable<Employee | undefined> { return of(this._employees$.value.find(e => e.id === id)).pipe(delay(300)); }
-  getLeadById(id: string): Observable<Lead | undefined> { return of(this._leads$.value.find(l => l.id === id)).pipe(delay(300)); }
-  getSupplierById(id: string): Observable<Supplier | undefined> { return of(this._suppliers$.value.find(s => s.id === id)).pipe(delay(300)); }
-  getOpportunityById(id: string): Observable<Opportunity | undefined> { return of(this._opportunities$.value.find(o => o.id === id)).pipe(delay(300)); }
+  // ===== PRODUCTION ORDERS =====
+  private productionOrders: ProductionOrder[] = [
+    { id: '1', orderNo: 'PRD-2024-001', product: 'كرسي مكتبي برو', quantity: 50, startDate: '2024-12-05', endDate: '2024-12-20', progress: 75, status: 'in_progress' },
+    { id: '2', orderNo: 'PRD-2024-002', product: 'طاولة اجتماعات', quantity: 10, startDate: '2024-12-08', endDate: '2024-12-25', progress: 30, status: 'in_progress' },
+  ];
 
-  getChatMessages(userId: string): Observable<ChatMessage[]> {
-    return of(this._chatHistory$.value.filter(m => m.senderId === userId || m.receiverId === userId)).pipe(delay(200));
+  // ===== GOALS / OKRs =====
+  private goals: Goal[] = [
+    { id: '1', title: 'تحقيق مبيعات 2 مليون ريال Q1 2025', owner: 'سارة علي', deadline: '2025-03-31', progress: 45, type: 'company', status: 'ongoing' },
+    { id: '2', title: 'تقليص وقت تسليم الطلبات إلى 24 ساعة', owner: 'عمر إبراهيم', deadline: '2025-01-31', progress: 72, type: 'department', status: 'ongoing' },
+    { id: '3', title: 'رفع معدل رضا العملاء إلى 95%', owner: 'محمد حسن', deadline: '2025-06-30', progress: 88, type: 'company', status: 'ongoing' },
+  ];
+
+  // ===== KPIs =====
+  private kpis: KPI[] = [
+    { id: '1', name: 'معدل رضا العملاء', target: 95, current: 88, unit: '%', trend: 'up' },
+    { id: '2', name: 'وقت تسليم الطلبات', target: 24, current: 31, unit: 'ساعة', trend: 'down' },
+    { id: '3', name: 'معدل الاحتفاظ بالموظفين', target: 90, current: 92, unit: '%', trend: 'up' },
+    { id: '4', name: 'نسبة تحصيل المديونيات', target: 95, current: 87, unit: '%', trend: 'steady' },
+  ];
+
+  // ===== AUTOMATION RULES =====
+  private automationRules: AutomationRule[] = [
+    { id: '1', name: 'إرسال إيميل ترحيب للعميل الجديد', trigger: 'إنشاء عميل جديد', action: 'إرسال بريد إلكتروني ترحيبي', isActive: true, lastRun: '2024-12-10 09:00' },
+    { id: '2', name: 'إشعار انخفاض المخزون', trigger: 'مخزون المنتج < 10', action: 'إرسال إشعار لمدير المستودع', isActive: true, lastRun: '2024-12-09 17:30' },
+    { id: '3', name: 'تذكير الموردين المتأخرين', trigger: 'فاتورة متأخرة > 15 يوم', action: 'إرسال تذكير تلقائي للمورد', isActive: false },
+  ];
+
+  // ================================================================
+  // SERVICE METHODS
+  // ================================================================
+
+  getUsers(): Observable<User[]> { return of(this.users); }
+  getEmployees(): Observable<Employee[]> { return of(this.employees); }
+  getProducts(): Observable<Product[]> { return of(this.products); }
+  getSalesOrders(): Observable<SalesOrder[]> { return of(this.salesOrders); }
+  getSuppliers(): Observable<Supplier[]> { return of(this.suppliers); }
+  getLeads(): Observable<Lead[]> { return of(this.leads); }
+  getOpportunities(): Observable<Opportunity[]> { return of(this.opportunities); }
+  getNotifications(): Observable<ErpNotification[]> { return of(this.notifications); }
+  getActivities(): Observable<Activity[]> { return of(this.activities); }
+  getAIInsights(): Observable<AIInsight[]> { return of(this.aiInsights); }
+  getBackups(): Observable<BackupRecord[]> { return of(this.backups); }
+  getCustomFields(): Observable<CustomField[]> { return of(this.customFields); }
+  getJobs(): Observable<SystemJob[]> { return of(this.jobs); }
+  getSecurityLogs(): Observable<SecurityLog[]> { return of(this.securityLogs); }
+  getAccounts(): Observable<LedgerAccount[]> { return of(this.accounts); }
+  getBOMs(): Observable<BOM[]> { return of(this.boms); }
+  getProjects(): Observable<Project[]> { return of(this.projects); }
+  getRules(): Observable<Rule[]> { return of(this.rules); }
+  getWorkflows(): Observable<WorkflowItem[]> { return of(this.workflows); }
+  getAssets(): Observable<FixedAsset[]> { return of(this.assets); }
+  getProductionOrders(): Observable<ProductionOrder[]> { return of(this.productionOrders); }
+  getGoals(): Observable<Goal[]> { return of(this.goals); }
+  getKPIs(): Observable<KPI[]> { return of(this.kpis); }
+  getAutomationRules(): Observable<AutomationRule[]> { return of(this.automationRules); }
+
+  getStats(): Observable<Statistics> {
+    return of({
+      totalRevenue: 1240000, revenueGrowth: 14.2, monthlyOrders: 1842, ordersGrowth: 8.7,
+      totalUsers: 354, lowStockAlerts: 4, sales: '$1.24M', revenue: '+14.2%', customers: '950+', orders: '1,842'
+    });
   }
+  getDashboardStats(): Observable<Statistics> { return this.getStats(); }
 
-  getNotifications(): Observable<Notification[]> { return this._notifications$.asObservable(); }
-  getUnreadNotificationsCount(): Observable<number> { return this._notifications$.pipe(map(ns => ns.filter(n => !n.read).length)); }
+  getRecommendations(): Observable<any[]> { return of([]); }
+  getSimulation(p: number, q: number, c: number): Observable<any> { return of({}); }
+  getJournalEntries(): Observable<JournalEntry[]> { return of([]); }
+  getProjectTasks(projectId: string): Observable<ProjectTask[]> { return of([]); }
 
-  markNotificationAsRead(id: string) {
-    const ns = this._notifications$.value.map(n => n.id === id ? { ...n, read: true } : n);
-    this._notifications$.next(ns);
-  }
+  // By-ID helpers
+  getUserById(id: string): Observable<User | undefined> { return of(this.users.find(u => u.id === id)); }
+  getEmployeeById(id: string): Observable<Employee | undefined> { return of(this.employees.find(e => e.id === id)); }
+  getSupplierById(id: string): Observable<Supplier | undefined> { return of(this.suppliers.find(s => s.id === id)); }
+  getSalesOrderById(id: string): Observable<SalesOrder | undefined> { return of(this.salesOrders.find(o => o.id === id)); }
+  getLeadById(id: string): Observable<Lead | undefined> { return of(this.leads.find(l => l.id === id)); }
 
-  sendMessage(receiverId: string, content: string) {
-    const msg: ChatMessage = { id: Date.now().toString(), senderId: '1', receiverId, content, time: 'الآن', status: 'sent' };
-    this._chatHistory$.next([...this._chatHistory$.value, msg]);
-    
-    // Auto-reply mock
-    setTimeout(() => {
-      const reply: ChatMessage = { id: (Date.now()+1).toString(), senderId: receiverId, receiverId: '1', content: 'شكراً جزيلاً! جاري المتابعة.', time: 'الآن', status: 'delivered' };
-      this._chatHistory$.next([...this._chatHistory$.value, reply]);
-    }, 2000);
-  }
-
-  getDashboardStats(): Observable<Statistics> {
-    return of({ totalRevenue:1240500, monthlyOrders:154, totalUsers:28, lowStockAlerts:18, revenueGrowth:12.4, ordersGrowth:8.1, netProfit:440500, growthRate:14.2 }).pipe(delay(400));
-  }
-
-  getActivities(): Observable<Activity[]> {
-    const activities: Activity[] = [
-      { id:'1', type:'order', message:'طلب جديد من شركة تك نيكسوس', time:'منذ 5 دقائق', user:'النظام', amount:45600 },
-      { id:'2', type:'stock', message:'إعادة تعبئة مخزون ماك بوك برو', time:'منذ ساعة', user:'مدير المستودع' },
-      { id:'3', type:'alert', message:'مخزون منخفض: شاشة استوديو (8 قطع)', time:'منذ 3 ساعات', user:'المراقب الذكي' },
-      { id:'4', type:'payment', message:'تم استلام دفعة $12,400', time:'منذ 5 ساعات', user:'المحاسبة', amount:12400 },
-      { id:'5', type:'user', message:'انضم مستخدم جديد: ريم العبدالله', time:'منذ يوم', user:'النظام' },
-      { id:'6', type:'system', message:'تم تنفيذ النسخ الاحتياطي التلقائي بنجاح', time:'منذ يومين', user:'النظام' },
-    ];
-    return of<Activity[]>(activities).pipe(delay(600));
-  }
+  // Mutations (mock)
+  sendMessage(userId: string, content: string): void { console.log('[Mock] Message sent', { userId, content }); }
+  markNotificationAsRead(id: string): void { const n = this.notifications.find(x => x.id === id); if (n) n.read = true; }
+  getUnreadNotificationsCount(): Observable<number> { return of(this.notifications.filter(n => !n.read).length); }
+  getChatMessages(userId: string): Observable<ChatMessage[]> { return of([]); }
+  runJob(jobName: string): void { console.log('[Mock] Running job:', jobName); }
 }

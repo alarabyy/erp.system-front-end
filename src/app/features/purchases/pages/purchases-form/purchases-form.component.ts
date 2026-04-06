@@ -109,7 +109,7 @@ export class PurchasesFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
-      this.data.getSupplierById(id).subscribe(s => { if (s) this.form = { ...s }; });
+      this.data.getSupplierById(id).subscribe((s: Supplier | undefined) => { if (s) this.form = { ...s }; });
     }
   }
 

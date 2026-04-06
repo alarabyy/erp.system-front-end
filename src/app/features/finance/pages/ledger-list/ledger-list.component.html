@@ -1,0 +1,74 @@
+<div class="erp-page animate-fade-in">
+  <!-- خريطة الحسابات السريعة (Summary) -->
+  <div class="summary-grid">
+    <div class="summary-card asset-border">
+      <div class="card-icon">🏛️</div>
+      <div class="card-info">
+        <span class="label">إجمالي الأصول</span>
+        <span class="value">$200,000</span>
+      </div>
+      <span class="trend up">2.5%+</span>
+    </div>
+    <div class="summary-card liability-border">
+      <div class="card-icon">📉</div>
+      <div class="card-info">
+        <span class="label">إجمالي الخصوم</span>
+        <span class="value">$45,000</span>
+      </div>
+      <span class="trend down">1.2%-</span>
+    </div>
+    <div class="summary-card profit-border">
+      <div class="card-icon">📈</div>
+      <div class="card-info">
+        <span class="label">صافي الثروة</span>
+        <span class="value">$155,000</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- جدول شجرة الحسابات -->
+  <div class="data-table-wrap">
+    <header class="table-header">
+      <div class="title-group">
+        <h3>شجرة الحسابات (General Ledger)</h3>
+        <p>إدارة وتتبع كافة الحسابات المالية للشركة</p>
+      </div>
+      <div class="table-actions">
+        <button class="btn-luxe btn-ghost">تصدير PDF</button>
+        <button class="btn-luxe btn-primary">+ إضافة حساب جديد</button>
+      </div>
+    </header>
+
+    <table class="erp-table">
+      <thead>
+        <tr>
+          <th>كود الحساب</th>
+          <th>اسم الحساب</th>
+          <th>التصنيف</th>
+          <th>الحالة</th>
+          <th>الرصيد الحالي</th>
+          <th class="text-left">العمليات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let acc of accounts$ | async">
+          <td class="font-bold text-primary">{{ acc.code }}</td>
+          <td>{{ acc.name }}</td>
+          <td>
+            <span class="type-tag" [class]="acc.type">{{ getAccountTypeLabel(acc.type) }}</span>
+          </td>
+          <td>
+            <span class="status-chip active">نشط</span>
+          </td>
+          <td class="balance-cell">{{ acc.balance | currency }}</td>
+          <td>
+            <div class="row-actions">
+              <button class="action-btn" title="تفاصيل السجل">👁️</button>
+              <button class="action-btn" title="تعديل الحساب">✏️</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
