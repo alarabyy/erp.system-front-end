@@ -1,1 +1,49 @@
-<p>projects-list works!</p>
+<div class="erp-page animate-fade-in projects-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">محفظة المشاريع الاستراتيجية</div>
+      <h1>🏗️ إدارة المشاريع والمتابعة</h1>
+      <p>تنفيذ المخططات الزمنية وتخصيص الموارد لضمان تسليم المشاريع في مواعيدها</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-ghost">📅 Gantt Chart</button>
+       <button class="btn-luxe btn-primary">
+          <span class="btn-icon">+</span> مشروع جديد
+       </button>
+    </div>
+  </div>
+
+  <div class="projects-grid">
+     <div *ngFor="let p of projects" class="project-card luxe-card pulse-hover">
+        <div class="p-header">
+           <span class="p-category">{{ p.category }}</span>
+           <span class="p-priority" [class]="p.priority">{{ p.priorityLabel }}</span>
+        </div>
+        <h3 class="p-name">{{ p.name }}</h3>
+        <p class="p-client">العميل: {{ p.client }}</p>
+        
+        <div class="p-progress">
+           <div class="prog-text"><span>الإنجاز</span> <span>{{ p.progress }}%</span></div>
+           <div class="p-bar"><div class="pf" [style.width]="p.progress + '%'" [style.background]="p.color"></div></div>
+        </div>
+
+        <div class="p-meta">
+           <div class="meta-item"><span>📅 البداية</span> <span>{{ p.startDate }}</span></div>
+           <div class="meta-item"><span>⌛ النهاية</span> <span>{{ p.endDate }}</span></div>
+        </div>
+
+        <div class="p-team">
+           <div class="team-avatars">
+              <span *ngFor="let m of p.team" class="avatar-sm">{{ m }}</span>
+              <span class="avatar-plus">+{{ p.teamCount }}</span>
+           </div>
+           <div class="p-budget">الميزانية: <span class="bg-val">{{ p.budget | currency:'USD':'symbol':'1.0-0' }}</span></div>
+        </div>
+
+        <div class="p-actions">
+           <button class="action-btn view">👁️ استعراض</button>
+           <button class="action-btn edit">⚙️ الإدارة</button>
+        </div>
+     </div>
+  </div>
+</div>

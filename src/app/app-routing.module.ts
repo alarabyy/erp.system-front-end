@@ -30,6 +30,7 @@ const routes: Routes = [
   { path: 'files', loadChildren: () => import('./features/files/files.module').then(m => m.FilesModule) },
   { path: 'calendar', loadChildren: () => import('./features/calendar/calendar.module').then(m => m.CalendarModule) },
   { path: 'products', loadChildren: () => import('./features/products/products.module').then(m => m.ProductsModule) },
+  { path: 'pos', loadChildren: () => import('./features/pos/pos.module').then(m => m.PosModule) },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
 ];

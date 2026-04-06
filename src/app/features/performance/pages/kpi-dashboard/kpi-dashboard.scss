@@ -1,0 +1,56 @@
+.kpi-page { padding: 1rem 1.5rem; direction: rtl; font-family: 'Cairo', sans-serif; }
+
+.kpi-main-stats {
+   display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 1.5rem;
+}
+
+.kpi-card-total {
+   padding: 1.5rem; .k-label { font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.75rem; }
+   .k-value { font-size: 2.2rem; font-weight: 900; color: #1e293b; margin-bottom: 1rem; }
+   .k-progress { height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; margin-bottom: 1rem; .pf { height: 100%; border-radius: 10px; } }
+   .k-footer { font-size: 0.7rem; font-weight: 800; color: #94a3b8; span { color: #10b981; } }
+}
+
+.content-layout {
+   display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; margin-top: 2rem;
+   @media (max-width: 1200px) { grid-template-columns: 1fr; }
+}
+
+// ═══ EMPLOYEE PERFORMANCE TABLE ═══
+.employee-perf {
+   padding: 1.5rem;
+   .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; h3 { font-size: 1.1rem; font-weight: 900; } .badge-active { font-size: 0.7rem; font-weight: 900; color: #0062ff; background: #eff6ff; padding: 4px 10px; border-radius: 6px; } }
+}
+
+.luxe-table {
+   width: 100%; border-collapse: separate; border-spacing: 0 0.5rem;
+   th { text-align: right; padding: 1rem; font-size: 0.72rem; color: #94a3b8; border-bottom: 1.5px solid #f8fafc; font-weight: 800; }
+   td { padding: 1.25rem 1rem; border-bottom: 1px solid #f8fafc; vertical-align: middle; }
+
+   .user-cell {
+      display: flex; align-items: center; gap: 0.75rem;
+      .avatar-box { width: 36px; height: 36px; border-radius: 10px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #475569; font-size: 0.85rem; border: 1.5px solid #e2e8f0; }
+      .name-box { display: flex; flex-direction: column; .n-full { font-weight: 850; font-size: 0.9rem; color: #1e293b; } .n-role { font-size: 0.68rem; color: #94a3b8; font-weight: 700; } }
+   }
+
+   .dept-pill { font-size: 0.7rem; font-weight: 800; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 30px; }
+   .stars { font-size: 0.75rem; letter-spacing: 1px; }
+   .score-badge { color: white; font-weight: 900; padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; }
+}
+
+.simple-progress {
+   display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.65rem; font-weight: 900; color: #64748b;
+   .sp-bg { height: 4px; background: #f1f5f9; border-radius: 10px; .pf { height: 100%; background: #0062ff; border-radius: 10px; } }
+}
+
+// ═══ SIDEBAR: DEPT ANALYSIS ═══
+.side-sidebar {
+   padding: 1.5rem; .card-header h3 { font-size: 1rem; font-weight: 900; margin-bottom: 1.5rem; }
+   .dept-stats { display: flex; flex-direction: column; gap: 1.25rem; }
+   .dept-item {
+      .di-head { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 850; color: #475569; margin-bottom: 0.5rem; }
+      .di-bar { height: 6px; background: #f1f5f9; border-radius: 10px; .pf { height: 100%; border-radius: 10px; } }
+   }
+
+   .motivation-quote { margin-top: 3rem; padding-top: 1.5rem; border-top: 1.5px dashed #e2e8f0; font-style: italic; p { font-size: 0.85rem; line-height: 1.6; color: #64748b; font-weight: 600; } span { display: block; margin-top: 0.5rem; text-align: left; font-size: 0.75rem; color: #94a3b8; font-weight: 800; } }
+}

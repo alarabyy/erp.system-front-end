@@ -1,0 +1,110 @@
+<div class="erp-page animate-fade-in purchases-page">
+  <div class="page-header-luxe luxury-accent">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة سلسلة الإمداد المتقدمة</div>
+      <h1>📦 المشتريات والموردون الاستراتيجيون</h1>
+      <p>تحليل المشتريات المؤسسية، إدارة الاعتمادات المستندية، وتتبع تدفقات الموردين الدوليين والمحليين</p>
+    </div>
+    <div class="ph-actions">
+      <button class="btn-luxe btn-ghost">📊 تقرير المشتريات الربع سنوي</button>
+      <button class="btn-luxe btn-primary" routerLink="/purchases/create">
+         <span class="btn-icon">⚡</span> إنشاء أمر شراء جديد
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid-luxe purchases-summary">
+     <div class="luxe-card p-stat-card">
+        <div class="ps-icon">🏭</div>
+        <div class="ps-info">
+           <span class="ps-label">إجمالي الموردون</span>
+           <h2 class="ps-val">12</h2>
+           <span class="ps-trend">6 موردين دوليين</span>
+        </div>
+     </div>
+     <div class="luxe-card p-stat-card">
+        <div class="ps-icon active">📋</div>
+        <div class="ps-info">
+           <span class="ps-label">أوامر شراء نشطة</span>
+           <h2 class="ps-val">24</h2>
+           <span class="ps-trend up">بزيادة 12% عن الشهر الماضي</span>
+        </div>
+     </div>
+     <div class="luxe-card p-stat-card">
+        <div class="ps-icon success">💰</div>
+        <div class="ps-info">
+           <span class="ps-label">قيمة المشتريات الشهرية</span>
+           <h2 class="ps-val">$128,450</h2>
+           <span class="ps-trend">تمت تصفية 85% من الفواتير</span>
+        </div>
+     </div>
+  </div>
+
+  <div class="filter-strip-luxe luxe-card">
+    <div class="fs-search">
+       <span class="fs-icon">🔍</span>
+       <input type="text" [(ngModel)]="searchTerm" placeholder="البحث باسم المورد، المسؤول، أو الدولة...">
+    </div>
+    <div class="fs-filters">
+       <select [(ngModel)]="filterStatus" class="luxe-select">
+          <option value="">كل حالات الموردين</option>
+          <option value="active">مورد نشط ✅</option>
+          <option value="inactive">غير نشط ⚠️</option>
+       </select>
+       <button class="btn-luxe btn-secondary">🏙️ القائمة السوداء للموردين</button>
+    </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-responsive" *ngIf="suppliers$ | async as suppliers">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>اسم المورد</th>
+                 <th>المسؤول المباشر</th>
+                 <th>قنوات التواصل</th>
+                 <th>الموقع الجغرافي</th>
+                 <th>إجمالي الطلبات</th>
+                 <th>حالة التعاقد</th>
+                 <th>إجراءات الإدارة</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let s of getFiltered(suppliers)" class="pulse-hover">
+                 <td class="supplier-cell"><strong>{{ s.name }}</strong></td>
+                 <td class="contact-cell">{{ s.contactPerson }}</td>
+                 <td class="comm-cell">
+                    <div class="c-wrap">
+                       <span class="c-email">{{ s.email }}</span>
+                       <span class="c-phone">{{ s.phone }}</span>
+                    </div>
+                 </td>
+                 <td class="loc-cell">{{ s.country }}</td>
+                 <td class="order-cell">
+                    <span class="o-pill">{{ s.totalOrders }} أمر شراء</span>
+                 </td>
+                 <td class="status-cell">
+                    <span class="l-pill" [class]="s.status">
+                       <span class="dot"></span>
+                       {{ s.status === 'active' ? 'مورد معتمد' : 'غير معتمد' }}
+                    </span>
+                 </td>
+                 <td class="action-cell">
+                    <button class="i-btn" [routerLink]="['/purchases/edit', s.id]" title="تعديل البيانات">✏️</button>
+                    <button class="i-btn success" title="أمر شراء جديد">+</button>
+                    <button class="i-btn alert" title="حذف">🗑️</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+     
+     <div class="table-footer">
+        <p>عرض محفظة تضم <b>{{ (suppliers$ | async)?.length }}</b> مورد استراتيجي موثق.</p>
+        <div class="pagination-luxe">
+           <button class="p-btn active">1</button>
+           <button class="p-btn">→</button>
+        </div>
+     </div>
+  </div>
+</div>

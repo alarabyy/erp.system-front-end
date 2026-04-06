@@ -1,0 +1,80 @@
+<div class="erp-page animate-fade-in pos-sessions-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة نقاط البيع الذكية</div>
+      <h1>🏪 جلسات الكاشير وفتح الصندوق</h1>
+      <p>تتبع جلسات البيع المفتوحة، عمليات الإغلاق اليومية، ومطابقة النقدية مع المبيعات الرقمية</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-primary" routerLink="/pos/checkout">
+          <span class="btn-icon">⚡</span> فتح واجهة البيع (POS)
+       </button>
+       <button class="btn-luxe btn-secondary">📊 تقرير تفصيلي</button>
+    </div>
+  </div>
+
+  <div class="stats-grid-luxe mt-1-5">
+     <div class="luxe-card s-stat">
+        <span class="s-label">الجلسات النشطة</span>
+        <h2 class="s-val">1</h2>
+        <span class="s-trend success">قيد العمل الآن</span>
+     </div>
+     <div class="luxe-card s-stat">
+        <span class="s-label">إجمالي مبيعات اليوم</span>
+        <h2 class="s-val">$3,840.50</h2>
+        <span class="s-trend">موزعة على 3 جلسات</span>
+     </div>
+     <div class="luxe-card s-stat">
+        <span class="s-label">الفروقات النقدية</span>
+        <h2 class="s-val success">$0.00</h2>
+        <span class="s-trend">تطابق كامل بنسبة 100%</span>
+     </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-header-luxe">
+        <h3>سجل الجلسات (Sessions History)</h3>
+        <div class="search-lite luxe-card">
+           🔍 <input type="text" placeholder="البحث برقم الجلسة أو اسم الكاشير...">
+        </div>
+     </div>
+     
+     <div class="table-responsive">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>رقم الجلسة</th>
+                 <th>المسؤول (الكاشير)</th>
+                 <th>بداية الجلسة</th>
+                 <th>إغلاق الجلسة</th>
+                 <th>المبيعات</th>
+                 <th>الرصيد المفتتح</th>
+                 <th>الحالة</th>
+                 <th>الإجراءات</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let s of sessions" class="pulse-hover">
+                 <td class="id-cell"><b>{{ s.id }}</b></td>
+                 <td class="cashier-cell"><div class="c-avatar">{{ s.cashier.charAt(0) }}</div> {{ s.cashier }}</td>
+                 <td class="date-cell">{{ s.openedAt }}</td>
+                 <td class="date-cell">{{ s.closedAt || '---' }}</td>
+                 <td class="val-cell"><b>{{ s.totalSales | currency:'USD':'symbol':'1.0-0' }}</b></td>
+                 <td class="bal-cell">{{ s.openingBalance | currency:'USD':'symbol':'1.0-0' }}</td>
+                 <td class="status-cell">
+                    <span class="l-pill" [class]="s.status">
+                       <span class="dot"></span>
+                       {{ s.status === 'open' ? 'نشطة الآن' : 'مغلقة تاماً' }}
+                    </span>
+                 </td>
+                 <td class="action-cell">
+                    <button class="i-btn" title="تفاصيل الجلسة">👁️</button>
+                    <button *ngIf="s.status === 'open'" class="i-btn alert" title="إغلاق فوري">🛑</button>
+                    <button *ngIf="s.status === 'closed'" class="i-btn success" title="طباعة Z-Report">🖨️</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+  </div>
+</div>

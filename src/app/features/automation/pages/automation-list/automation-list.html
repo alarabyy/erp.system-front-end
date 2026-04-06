@@ -1,1 +1,70 @@
-<p>automation-list works!</p>
+<div class="erp-page animate-fade-in automation-page">
+  <div class="page-header-luxe gray-bg">
+    <div class="ph-content">
+      <div class="ph-badge">مختبر الأتمتة والذكاء الاصطناعي</div>
+      <h1>⚡ أتمتة تدفق العمل (Workflows)</h1>
+      <p>تنفيذ المهام المتكررة آلياً وربط التطبيقات ببعضها لزيادة السرعة وتقليل الأخطاء البشرية</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-primary">
+          <span class="btn-icon">+</span> إنشاء روبوت أتمتة جديد
+       </button>
+    </div>
+  </div>
+
+  <div class="automation-grid">
+     <div *ngFor="let w of workflows" class="auto-card luxe-card pulse-hover">
+        <div class="card-top">
+           <div class="workflow-icons">
+              <span class="w-icon">{{ w.triggerIcon }}</span>
+              <span class="w-arrow">→</span>
+              <span class="w-icon">{{ w.actionIcon }}</span>
+           </div>
+           <div class="toggle-switch">
+              <input type="checkbox" [checked]="w.active" id="wf-{{w.id}}">
+              <label for="wf-{{w.id}}"></label>
+           </div>
+        </div>
+        
+        <h3 class="wf-title">{{ w.name }}</h3>
+        <p class="wf-desc">{{ w.desc }}</p>
+
+        <div class="wf-stats">
+           <div class="stat-item"><span>نُفذت اليوم</span> <span>{{ w.runsToday }} مرة</span></div>
+           <div class="stat-item"><span>آخر تشغيل</span> <span>{{ w.lastRun }}</span></div>
+        </div>
+
+        <div class="wf-footer">
+           <div class="wf-tags">
+              <span class="t-tag">{{ w.category }}</span>
+              <span class="t-tag success" *ngIf="w.successRate >= 98">عالي الكفاءة</span>
+           </div>
+           <button class="btn-sm-luxe">تعديل ⚙️</button>
+        </div>
+     </div>
+
+     <!-- Creating new placeholder -->
+     <div class="auto-card add-new-card">
+        <div class="add-inner">
+           <div class="plus-circle">+</div>
+           <p>استخدم القوالب الجاهزة للأتمتة</p>
+           <button class="btn-luxe btn-ghost">تصفح المكتبة 📚</button>
+        </div>
+     </div>
+  </div>
+
+  <div class="automation-logs luxe-card mt-2">
+     <div class="card-header">
+        <h3>سجل عمليات الأتمتة الأخيرة</h3>
+        <button class="btn-text">مشاهدة الكل →</button>
+     </div>
+     <div class="logs-list">
+        <div *ngFor="let log of logs" class="log-entry">
+           <span class="l-status" [class]="log.status"></span>
+           <span class="l-time">{{ log.time }}</span>
+           <p class="l-msg">تم تشغيل <b>{{ log.workflow }}</b>: {{ log.msg }}</p>
+           <span class="l-action">متابعة 🔍</span>
+        </div>
+     </div>
+  </div>
+</div>

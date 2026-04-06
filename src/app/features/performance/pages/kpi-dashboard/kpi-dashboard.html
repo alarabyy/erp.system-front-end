@@ -1,1 +1,88 @@
-<p>kpi-dashboard works!</p>
+<div class="erp-page animate-fade-in kpi-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">مؤشرات الأداء الاستراتيجي KPI</div>
+      <h1>📈 تقييم الأداء والإنتاجية</h1>
+      <p>تحليل البيانات اللحظي لقياس كفاءة الموظفين، الأقسام، والمشاريع الكبرى</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-ghost">📊 تصدير تقرير ربع سنوي</button>
+       <button class="btn-luxe btn-primary">
+          <span class="btn-icon">⚡</span> تحديث البيانات الفوري
+       </button>
+    </div>
+  </div>
+
+  <div class="kpi-main-stats stats-grid-luxe">
+     <div *ngFor="let k of mainKpis" class="luxe-card kpi-card-total">
+        <div class="k-label">{{ k.label }}</div>
+        <div class="k-value">{{ k.value }}%</div>
+        <div class="k-progress"><div class="pf" [style.width]="k.value + '%'" [style.background]="k.color"></div></div>
+        <div class="k-footer">بزيادة <span>{{ k.trend }}%</span> عن الشهر الماضي</div>
+     </div>
+  </div>
+
+  <div class="content-layout">
+     <!-- Employees Performance -->
+     <div class="luxe-card data-card employee-perf">
+        <div class="card-header">
+           <h3>تقييم أداء الكوادر البشرية</h3>
+           <span class="badge-active">أعلى 10 موظفين أداءً</span>
+        </div>
+        <div class="table-responsive">
+           <table class="luxe-table">
+              <thead>
+                 <tr>
+                    <th>الموظف</th>
+                    <th>القسم</th>
+                    <th>المهام المكتملة</th>
+                    <th>جودة المخرجات</th>
+                    <th>مؤشر الالتزام</th>
+                    <th>التقييم العام</th>
+                 </tr>
+              </thead>
+              <tbody>
+                 <tr *ngFor="let emp of employees">
+                    <td class="user-cell">
+                       <div class="avatar-box">{{ emp.initials }}</div>
+                       <div class="name-box">
+                          <span class="n-full">{{ emp.name }}</span>
+                          <span class="n-role">{{ emp.role }}</span>
+                       </div>
+                    </td>
+                    <td><span class="dept-pill">{{ emp.dept }}</span></td>
+                    <td><b>{{ emp.tasks }}</b> / 100</td>
+                    <td>
+                       <div class="stars">⭐⭐⭐⭐{{ emp.quality > 4.5 ? '⭐' : '' }}</div>
+                    </td>
+                    <td>
+                       <div class="simple-progress">
+                          <span>{{ emp.commitment }}%</span>
+                          <div class="sp-bg"><div class="pf" [style.width]="emp.commitment + '%'"></div></div>
+                       </div>
+                    </td>
+                    <td>
+                       <span class="score-badge" [style.background]="emp.scoreColor">{{ emp.score }}</span>
+                    </td>
+                 </tr>
+              </tbody>
+           </table>
+        </div>
+     </div>
+
+     <!-- Right Panel: Sector Breakdown -->
+     <div class="luxe-card side-sidebar">
+        <div class="card-header"><h3>تحليل كفاءة الأقسام</h3></div>
+        <div class="dept-stats">
+           <div *ngFor="let d of departmentEfficiency" class="dept-item">
+              <div class="di-head"><span>{{ d.name }}</span> <span>{{ d.val }}%</span></div>
+              <div class="di-bar"><div class="pf" [style.width]="d.val + '%'" [style.background]="d.color"></div></div>
+           </div>
+        </div>
+        <div class="motivation-quote">
+           <p>"الجودة تعني القيام بالأشياء بشكل صحيح حتى عندما لا يراقبك أحد."</p>
+           <span>— هنري فورد</span>
+        </div>
+     </div>
+  </div>
+</div>

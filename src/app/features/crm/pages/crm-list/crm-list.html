@@ -1,0 +1,95 @@
+<div class="erp-page animate-fade-in crm-page">
+  <div class="page-header-luxe crm-accent">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة العلاقات والفرص البيعية</div>
+      <h1>👥 نظام إدارة علاقات العملاء (CRM)</h1>
+      <p>تحميل خطوط البحث عن العملاء، إدارة الصفقات المحتملة، وتتبع رحلة العميل من أول تواصل حتى الإغلاق</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-ghost">📂 تصدير سجل العملاء</button>
+       <button class="btn-luxe btn-primary" routerLink="/crm/create">
+          <span class="btn-icon">+</span> إضافة فرصة بيع / عميل محتمل
+       </button>
+    </div>
+  </div>
+
+  <div class="pipeline-row-luxe stats-grid-luxe">
+     <div *ngFor="let stage of pipeline" class="luxe-card p-node" [style.border-top]="'4px solid ' + stage.color">
+        <span class="p-label">{{ stage.label }}</span>
+        <h2 class="p-count">{{ stage.count }}</h2>
+        <div class="stage-dot" [style.background]="stage.color"></div>
+     </div>
+  </div>
+
+  <div class="filter-strip-luxe luxe-card mt-1-5">
+    <div class="fs-search">
+       <span class="fs-icon">🔍</span>
+       <input type="text" [(ngModel)]="searchTerm" placeholder="ابحث عن عميل، شركة، أو مسؤول تواصل...">
+    </div>
+    <div class="fs-filters">
+       <select [(ngModel)]="filterStatus" class="luxe-select">
+          <option value="">كل مراحل القمع (Pipeline)</option>
+          <option value="new">عملاء جدد 🆕</option>
+          <option value="qualified">عملاء مؤهلون ⭐</option>
+          <option value="proposal">مرحلة العرض 📋</option>
+          <option value="won">صفقات محققة ✅</option>
+       </select>
+       <button class="btn-luxe btn-secondary">📞 جدولة مكالمات جماعية</button>
+    </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-responsive" *ngIf="leads$ | async as leads">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>الجهة / العميل المستهدف</th>
+                 <th>قنوات الاتصال</th>
+                 <th>القيمة المتوقعة</th>
+                 <th>مصدر العميل</th>
+                 <th>المرحلة الحالية</th>
+                 <th>تاريخ الإدراج</th>
+                 <th>الإجراءات</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let lead of getFiltered(leads)" class="pulse-hover">
+                 <td class="lead-cell">
+                    <div class="l-info">
+                       <span class="l-name">{{ lead.name }}</span>
+                       <span class="l-company">{{ lead.company }}</span>
+                    </div>
+                 </td>
+                 <td class="comm-cell">
+                    <div class="c-wrap">
+                       <span class="c-email">{{ lead.email }}</span>
+                       <span class="c-phone">{{ lead.phone }}</span>
+                    </div>
+                 </td>
+                 <td class="val-cell"><b>{{ lead.value | currency:'USD':'symbol':'1.0-0' }}</b></td>
+                 <td class="src-cell"><span class="src-badge">{{ lead.source }}</span></td>
+                 <td class="status-cell">
+                    <span class="l-pill" [class]="lead.status">
+                       {{ getStatusLabel(lead.status) }}
+                    </span>
+                 </td>
+                 <td class="date-cell">12/03/2026</td>
+                 <td class="action-cell">
+                    <button class="i-btn" [routerLink]="['/crm/edit', lead.id]" title="تعديل">✏️</button>
+                    <button class="i-btn success" title="تحويل لعميل">🏆</button>
+                    <button class="i-btn alert" title="حذف">🗑️</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+     
+     <div class="table-footer">
+        <p>عرض <b>{{ (leads$ | async)?.length }}</b> فرصة بيعية قيد المباشرة.</p>
+        <div class="pagination-luxe">
+           <button class="p-btn active">1</button>
+           <button class="p-btn">→</button>
+        </div>
+     </div>
+  </div>
+</div>

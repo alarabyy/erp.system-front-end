@@ -1,0 +1,70 @@
+<div class="erp-page animate-fade-in pos-analytics-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">تحليلات الأداء المباشر</div>
+      <h1>📊 إحصائيات مبيعات الكاشير (Live Dashboard)</h1>
+      <p>رؤية شاملة على تدفق النقدية، متوسط السلال الشرائية، وتحليل نشاط منافذ البيع لحظة بلحظة</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-ghost">📂 تصدير تقرير التوريد</button>
+       <button class="btn-luxe btn-primary" routerLink="/pos/checkout">⚡ واجهة البيع</button>
+    </div>
+  </div>
+
+  <div class="stats-grid-luxe mt-1-5">
+     <div *ngFor="let s of stats" class="luxe-card s-node" [style.background]="s.bg">
+        <div class="s-head">
+           <span class="s-icon Luxe-gradient" [style.color]="s.color">{{ s.icon }}</span>
+           <span class="s-label">{{ s.label }}</span>
+        </div>
+        <h2 class="s-val" [style.color]="s.color">{{ s.value }}</h2>
+     </div>
+  </div>
+
+  <div class="charts-row mt-1-5">
+     <div class="luxe-card chart-node">
+        <div class="node-header"><h3>📈 منحنى المبيعات على مدار الـ 12 ساعة الماضية</h3></div>
+        <apx-chart [series]="hourlySales.series" [chart]="hourlySales.chart" [xaxis]="hourlySales.xaxis" [colors]="hourlySales.colors" [stroke]="hourlySales.stroke" [fill]="hourlySales.fill" [grid]="hourlySales.grid" [dataLabels]="hourlySales.dataLabels"></apx-chart>
+     </div>
+     <div class="luxe-card chart-node pie">
+        <div class="node-header"><h3>🥧 تحليل طرق الدفع الرائدة</h3></div>
+        <apx-chart [series]="paymentMethods.series" [chart]="paymentMethods.chart" [labels]="paymentMethods.labels" [colors]="paymentMethods.colors" [plotOptions]="paymentMethods.plotOptions" [legend]="paymentMethods.legend"></apx-chart>
+     </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-header-luxe">
+        <h3>أكثر الفئات مبيعاً (Top Categories)</h3>
+     </div>
+     <div class="table-responsive">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>الفئة</th>
+                 <th>إجمالي المبيعات</th>
+                 <th>المساهمة في الربح</th>
+                 <th>معدل النشاط</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr>
+                 <td><b>💻 الإلكترونيات الذكية</b></td>
+                 <td class="val-cell">$4,250</td>
+                 <td><span class="badge-lite success">50% من الإجمالي</span></td>
+                 <td>
+                    <div style="width:100px;height:6px;background:#f1f5f9;border-radius:10px;overflow:hidden"><div style="width:85%;height:100%;background:#0062ff"></div></div>
+                 </td>
+              </tr>
+              <tr>
+                 <td><b>☕ قسم المأكولات والمشروبات</b></td>
+                 <td class="val-cell">$1,840</td>
+                 <td><span class="badge-lite info">22% من الإجمالي</span></td>
+                 <td>
+                    <div style="width:100px;height:6px;background:#f1f5f9;border-radius:10px;overflow:hidden"><div style="width:45%;height:100%;background:#10b981"></div></div>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+  </div>
+</div>

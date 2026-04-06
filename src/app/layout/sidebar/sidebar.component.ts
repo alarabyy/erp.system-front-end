@@ -38,6 +38,19 @@ export class SidebarComponent {
       ]
     },
     {
+      label: 'نقطة البيع (POS)',
+      icon: '⚡',
+      expanded: true,
+      children: [
+        { label: 'واجهة البيع السريع', path: '/pos/checkout', icon: '⚡', iconColor: '#2563eb' },
+        { label: 'سجل فواتير الـ POS', path: '/pos/orders', icon: '🧾', iconColor: '#10b981' },
+        { label: 'إحصائيات المبيعات', path: '/pos/analytics', icon: '📊', iconColor: '#f59e0b' },
+        { label: 'جلسات الكاشير', path: '/pos/sessions', icon: '🏪', iconColor: '#7c3aed' },
+        { label: 'عملاء الكاشير', path: '/pos/customers', icon: '👥', iconColor: '#ec4899' },
+        { label: 'إعدادات نقطة البيع', path: '/pos/settings', icon: '⚙️', iconColor: '#64748b' }
+      ]
+    },
+    {
       label: 'المالية والأصول',
       icon: '💰',
       expanded: false,

@@ -1,0 +1,62 @@
+.automation-page { padding: 1rem 1.5rem; direction: rtl; font-family: 'Cairo', sans-serif; }
+
+.automation-grid {
+   display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; margin-top: 2rem;
+   @media (max-width: 640px) { grid-template-columns: 1fr; }
+}
+
+.auto-card {
+   padding: 1.75rem; background: white; border: 1px solid #f1f5f9; border-radius: 28px; transition: all 0.3s;
+   &:hover { transform: translateY(-5px); box-shadow: 0 40px 100px -20px rgba(0,0,0,0.08); border-color: #0062ff; }
+
+   .card-top {
+      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;
+      .workflow-icons { display: flex; align-items: center; gap: 0.5rem; .w-icon { width: 44px; height: 44px; border-radius: 12px; background: #f8fafc; border: 1.5px solid #edf2f7; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; } .w-arrow { font-size: 0.8rem; color: #94a3b8; font-weight: 900; } }
+   }
+
+   .wf-title { font-size: 1.1rem; font-weight: 900; color: #0f172a; margin-bottom: 0.5rem; }
+   .wf-desc { font-size: 0.85rem; color: #64748b; font-weight: 700; line-height: 1.6; margin-bottom: 1.75rem; }
+
+   .wf-stats {
+      display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; border-top: 1.5px solid #f8fafc; padding-top: 1.5rem;
+      .stat-item { display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 850; color: #475569; position: relative; padding-right: 1.25rem; &:before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #0062ff; position: absolute; right: 0; top: 6px; } span:last-child { font-weight: 900; color: #0f172a; } }
+   }
+
+   .wf-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      .wf-tags { display: flex; gap: 0.5rem; .t-tag { font-size: 0.7rem; font-weight: 900; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; &.success { color: #059669; background: #ecfdf5; } } }
+      .btn-sm-luxe { border: 1.5px solid #e2e8f0; background: #fff; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 850; cursor: pointer; font-size: 0.75rem; font-family: inherit; transition: 0.2s; &:hover { border-color: #0062ff; color: #0062ff; } }
+   }
+}
+
+.add-new-card {
+   border: 2px dashed #cbd5e1; background: #f8fafc; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center;
+   .add-inner {
+      .plus-circle { width: 50px; height: 50px; border-radius: 50%; background: #fff; border: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 1.5rem; color: #94a3b8; font-weight: 300; }
+      p { font-size: 0.85rem; color: #64748b; font-weight: 800; margin-bottom: 1.5rem; }
+   }
+}
+
+// ═══ TOGGLE SWITCH ═══
+.toggle-switch {
+   input { opacity: 0; width: 0; height: 0; }
+   label { width: 44px; height: 24px; background-color: #e2e8f0; border-radius: 20px; position: relative; cursor: pointer; display: block; transition: 0.3s; &:after { content: ""; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; left: 3px; top: 3px; transition: 0.3s; } }
+   input:checked + label { background-color: #0062ff; &:after { left: 23px; } }
+}
+
+// ═══ AUTOMATION LOGS ═══
+.automation-logs {
+   padding: 1.75rem;
+   .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; h3 { font-size: 1.1rem; font-weight: 900; color: #0f172a; } .btn-text { background: none; border: none; font-weight: 900; color: #0062ff; cursor: pointer; font-family: inherit; } }
+}
+
+.log-entry {
+   display: flex; align-items: center; gap: 1rem; padding: 1.25rem 0; border-bottom: 1.5px solid #f8fafc; font-size: 0.88rem; transition: background 0.2s;
+   &:hover { background: #fafbfc; }
+   &:last-child { border: none; }
+
+   .l-status { width: 10px; height: 10px; border-radius: 50%; &.success { background: #10b981; } &.warn { background: #f59e0b; } &.error { background: #ef4444; } }
+   .l-time { color: #94a3b8; font-family: monospace; font-weight: 700; width: 80px; }
+   .l-msg { flex: 1; color: #475569; font-weight: 700; b { color: #0f172a; font-weight: 900; } }
+   .l-action { font-size: 0.75rem; font-weight: 900; color: #0062ff; cursor: pointer; &:hover { text-decoration: underline; } }
+}

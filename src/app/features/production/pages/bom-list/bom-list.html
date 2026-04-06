@@ -1,1 +1,90 @@
-<p>bom-list works!</p>
+<div class="erp-page animate-fade-in production-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة الموارد الإنتاجية MRP</div>
+      <h1>⚙️ إدارة قائمة المواد (BOM)</h1>
+      <p>تخطيط متطلبات المواد وجدولة الإنتاج الفعال بكفاءة عالية</p>
+    </div>
+    <div class="ph-actions">
+      <button class="btn-luxe btn-ghost">📊 تقرير التكاليف</button>
+      <button class="btn-luxe btn-primary">
+         <span class="btn-icon">+</span> إضافة هيكل منتج (BOM)
+      </button>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <!-- BOM Items Table -->
+    <div class="luxe-card data-card bom-table">
+      <div class="card-header">
+        <h3>قوائم المواد النشطة</h3>
+        <input type="text" placeholder="ابحث عن منتج نهائي أو كود..." class="lite-search">
+      </div>
+
+      <div class="table-responsive">
+        <table class="luxe-table">
+          <thead>
+            <tr>
+              <th>كود المنتج</th>
+              <th>المنتج النهائي</th>
+              <th>عدد المكونات</th>
+              <th>وقت التصنيع</th>
+              <th>تكلفة الوحدة</th>
+              <th>الحالة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let bom of boms">
+              <td class="code">#{{ bom.code }}</td>
+              <td class="name"><strong>{{ bom.name }}</strong></td>
+              <td><span class="count-badge">{{ bom.componentCount }} مكوّن</span></td>
+              <td>{{ bom.leadTime }} يوم</td>
+              <td class="price">{{ bom.costPerUnit | currency:'USD':'symbol':'1.0-0' }}</td>
+              <td>
+                <span class="status-pill" [class]="bom.status">
+                  <span class="dot"></span>
+                  {{ bom.statusLabel }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="icon-btn">🔍 تفاصيل</button>
+                <button class="icon-btn">🗑️</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Side: Production Stats & Alerts -->
+    <div class="side-widgets">
+      <div class="luxe-card widget-card">
+         <div class="w-header"><h3>تحميل خطوط الإنتاج</h3></div>
+         <div class="production-load">
+            <div *ngFor="let line of productionLines" class="load-item">
+               <div class="li-info">
+                  <span>{{ line.name }}</span>
+                  <span>{{ line.load }}%</span>
+               </div>
+               <div class="progress-bar"><div class="pf" [style.width]="line.load + '%'" [style.background]="line.color"></div></div>
+            </div>
+         </div>
+      </div>
+
+      <div class="luxe-card alert-card">
+         <div class="w-header"><h3>⚠️ تنبيهات المخزون (MRP)</h3></div>
+         <div class="alerts-list">
+            <div *ngFor="let alert of alerts" class="alert-item">
+               <span class="a-icon">🚨</span>
+               <div class="a-content">
+                  <p>{{ alert.message }}</p>
+                  <span>مستوى النقص: {{ alert.deficit }} وحدة</span>
+               </div>
+            </div>
+         </div>
+         <button class="btn-luxe btn-secondary w-full mt-1">توليد طلبات شراء آلية 🛠️</button>
+      </div>
+    </div>
+  </div>
+</div>

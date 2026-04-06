@@ -1,1 +1,142 @@
-<p>assets-list works!</p>
+<div class="erp-page animate-fade-in assets-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة الأصول الرأسمالية</div>
+      <h1>🏛️ الأصول الثابتة والممتلكات</h1>
+      <p>تتبع، تقييم، وحساب إهلاك الأصول المسجلة في كافة فروع المؤسسة</p>
+    </div>
+    <div class="ph-actions">
+      <button class="btn-luxe btn-ghost">📂 تصدير Excel</button>
+      <button class="btn-luxe btn-primary">
+         <span class="btn-icon">+</span> إدراج أصل جديد
+      </button>
+    </div>
+  </div>
+
+  <!-- Asset KPI Stats -->
+  <div class="stats-grid-luxe">
+    <div class="luxe-card stat-card">
+      <div class="stat-icon" style="background: rgba(0, 98, 255, 0.1); color: #0062ff;">💰</div>
+      <div class="stat-info">
+        <span class="s-label">إجمالي قيمة الأصول</span>
+        <h3 class="s-value">$1,254,000</h3>
+        <span class="s-trend up">▲ 4.5% زيادة سنوية</span>
+      </div>
+    </div>
+    <div class="luxe-card stat-card">
+      <div class="stat-icon" style="background: rgba(244, 63, 94, 0.1); color: #f43f5e;">📉</div>
+      <div class="stat-info">
+        <span class="s-label">مجمع الإهلاك الكلي</span>
+        <h3 class="s-value">$245,600</h3>
+        <span class="s-trend neutral">يحدث دورياً كل 3 أشهر</span>
+      </div>
+    </div>
+    <div class="luxe-card stat-card">
+      <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">✅</div>
+      <div class="stat-info">
+        <span class="s-label">أصول نشطة</span>
+        <h3 class="s-value">128 أصل</h3>
+        <span class="s-trend">تعمل بكفاءة 100%</span>
+      </div>
+    </div>
+    <div class="luxe-card stat-card">
+      <div class="stat-icon" style="background: rgba(100, 116, 139, 0.1); color: #64748b;">🔄</div>
+      <div class="stat-info">
+        <span class="s-label">تحت الصيانة</span>
+        <h3 class="s-value">5 أصول</h3>
+        <span class="s-trend down">تأثير طفيف على العمليات</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-layout">
+    <!-- Assets Table -->
+    <div class="luxe-card data-card main-table">
+      <div class="card-header">
+        <div class="ch-left">
+          <h3>قائمة الأصول الثابتة</h3>
+          <span class="badge-total">إجمالي 128 عنصر</span>
+        </div>
+        <div class="ch-search">
+          <input type="text" placeholder="ابحث باسم الأصل أو الكود...">
+        </div>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="luxe-table">
+          <thead>
+            <tr>
+              <th>كود الأصل</th>
+              <th>الاسم والوصف</th>
+              <th>التصنيف</th>
+              <th>تاريخ الشراء</th>
+              <th>القيمة الشرائية</th>
+              <th>القيمة الحالية</th>
+              <th>الحالة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let asset of mockAssets" class="asset-row">
+              <td class="code">#{{ asset.code }}</td>
+              <td class="name">
+                <div class="n-wrap">
+                  <span class="n-title">{{ asset.name }}</span>
+                  <span class="n-desc">{{ asset.description }}</span>
+                </div>
+              </td>
+              <td><span class="cat-pill">{{ asset.category }}</span></td>
+              <td class="date">{{ asset.purchaseDate }}</td>
+              <td class="price">{{ asset.purchasePrice | currency:'USD' }}</td>
+              <td class="current-price" [style.color]="asset.currentValue > 0 ? '#0062ff' : '#64748b'">
+                {{ asset.currentValue | currency:'USD' }}
+              </td>
+              <td>
+                <span class="status-pill" [class]="asset.status">
+                  <span class="dot"></span>
+                  {{ asset.statusLabel }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="icon-btn">👁️</button>
+                <button class="icon-btn">⚙️</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-pagination">
+        <span>عرض 6 من 128 أصل</span>
+        <div class="pag-btns">
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>→</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Panel: Asset Categories Distribution -->
+    <div class="luxe-card side-panel">
+       <div class="card-header">
+          <h3>توزيع النوعي للأصول</h3>
+       </div>
+       <div class="categories-list">
+          <div *ngFor="let cat of assetCategories" class="cat-item">
+             <div class="cat-info">
+                <span class="cat-name">{{ cat.name }}</span>
+                <span class="cat-count">{{ cat.count }}</span>
+             </div>
+             <div class="progress-bg">
+                <div class="progress-fill" [style.width]="cat.percent + '%'" [style.background]="cat.color"></div>
+             </div>
+          </div>
+       </div>
+       <div class="cta-box">
+          <p>هل تحتاج لتقرير إهلاك مفصل لكافة الأصول؟</p>
+          <button class="btn-luxe btn-secondary w-full">توليد تقرير الإهلاك 📊</button>
+       </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="erp-page animate-fade-in pos-orders-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">سجل المبيعات اليومية</div>
+      <h1>🧾 فواتير وسجلات نقطة البيع</h1>
+      <p>مراجعة فواتير الكاشير، معالجة المرتجعات، وتدقيق العمليات المالية اليومية</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-primary" routerLink="/pos/checkout">+ فاتورة مبسطة جديدة</button>
+       <button class="btn-luxe btn-secondary">📂 أرشفة الكل</button>
+    </div>
+  </div>
+
+  <div class="luxe-card filter-strip-luxe mt-1-5">
+    <div class="fs-search">
+       🔍 <input type="text" placeholder="البحث برقم الفاتورة أو اسم العميل...">
+    </div>
+    <div class="fs-filters">
+       <select class="luxe-select">
+          <option>كل طرق الدفع</option>
+          <option>نقداً 💵</option>
+          <option>بطاقة 💳</option>
+       </select>
+       <button class="btn-luxe btn-ghost">📅 تصفية بالتاريخ</button>
+    </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-responsive">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>رقم الفاتورة</th>
+                 <th>العميل</th>
+                 <th>التاريخ والوقت</th>
+                 <th>عدد الأصناف</th>
+                 <th>إجمالي المبلغ</th>
+                 <th>طريقة الدفع</th>
+                 <th>الحالة</th>
+                 <th>الإجراءات</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let o of orders" class="pulse-hover">
+                 <td class="id-cell"><b>{{ o.id }}</b></td>
+                 <td class="cus-cell">{{ o.customer }}</td>
+                 <td class="date-cell">{{ o.date }}</td>
+                 <td class="cnt-cell"><span class="badge-lite">{{ o.itemsCount }} قطع</span></td>
+                 <td class="val-cell"><b>{{ o.total | currency:'USD':'symbol':'1.0-0' }}</b></td>
+                 <td class="pay-cell">
+                    <span class="pay-badge" [class]="o.paymentMethod">
+                       {{ o.paymentMethod === 'cash' ? '💵 نقدي' : '💳 بطاقة بريميم' }}
+                    </span>
+                 </td>
+                 <td class="status-cell">
+                    <span class="l-pill success"><span class="dot"></span> مدفوع</span>
+                 </td>
+                 <td class="action-cell">
+                    <button class="i-btn" title="معاينة الفاتورة">👁️</button>
+                    <button class="i-btn alert" title="مرتجع">🔄</button>
+                    <button class="i-btn" title="إرسال عبر واتساب">📱</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+  </div>
+</div>

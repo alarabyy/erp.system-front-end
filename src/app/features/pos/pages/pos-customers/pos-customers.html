@@ -1,0 +1,77 @@
+<div class="erp-page animate-fade-in pos-customers-page">
+  <div class="page-header-luxe">
+    <div class="ph-content">
+      <div class="ph-badge">محفظة ولاء العملاء</div>
+      <h1>👥 عملاء نظام نقاط البيع (POS Clients)</h1>
+      <p>إدارة بيانات العملاء، تتبع نقاط الولاء، وتحليل التاريخ الشرائي لزيادة معدل الاستبقاء</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-primary">+ إضافة عميل جديد</button>
+       <button class="btn-luxe btn-secondary">🎁 إرسال عروض ترويجية</button>
+    </div>
+  </div>
+
+  <div class="stats-grid-luxe mt-1-5">
+     <div class="luxe-card c-stat success-accent">
+        <span class="c-label">إجمالي العملاء</span>
+        <h2 class="c-val">1,248</h2>
+        <span class="c-trend">▲ 12 عميل جديد هذا الأسبوع</span>
+     </div>
+     <div class="luxe-card c-stat primary-accent">
+        <span class="c-label">نقاط الولاء الموزعة</span>
+        <h2 class="c-val">45.8K</h2>
+        <span class="c-trend">نقاط نشطة قابلة للاستبدال</span>
+     </div>
+     <div class="luxe-card c-stat warn-accent">
+        <span class="c-label">معدل العودة (Retention)</span>
+        <h2 class="c-val">68%</h2>
+        <span class="c-trend">تحسن بنسبة 5% عن الشهر الماضي</span>
+     </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-header-luxe">
+        <h3>قائمة عملاء الكاشير (Loyalty List)</h3>
+        <div class="search-lite luxe-card">
+           🔍 <input type="text" placeholder="البحث بالاسم، برقم الهاتف، أو كود العميل...">
+        </div>
+     </div>
+     
+     <div class="table-responsive">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>العميل المستهدف</th>
+                 <th>رقم التواصل</th>
+                 <th>إجمالي المشتريات</th>
+                 <th>رصيد نقاط الولاء</th>
+                 <th>تاريخ آخر زيارة</th>
+                 <th>الإجراءات</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let c of customers" class="pulse-hover">
+                 <td class="user-cell">
+                    <div class="avatar-ring luxe-shadow">{{ c.name.charAt(0) }}</div>
+                    <div class="u-info">
+                       <span class="u-name">{{ c.name }}</span>
+                       <span class="u-id">{{ c.id }}</span>
+                    </div>
+                 </td>
+                 <td class="phone-cell"><b>{{ c.phone }}</b></td>
+                 <td class="val-cell"><b>{{ c.totalSpent | currency:'USD':'symbol':'1.0-0' }}</b></td>
+                 <td class="points-cell">
+                    <span class="p-badge Luxe-gradient">{{ c.loyaltyPoints }} نقطة ✨</span>
+                 </td>
+                 <td class="date-cell">{{ c.lastVisit }}</td>
+                 <td class="action-cell">
+                    <button class="i-btn" title="تاريخ الشراء">📅</button>
+                    <button class="i-btn success" title="إهداء نقاط">+</button>
+                    <button class="i-btn alert" title="حذف">🗑️</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+  </div>
+</div>

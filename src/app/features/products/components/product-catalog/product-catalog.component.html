@@ -1,69 +1,37 @@
-<div class="table-container animate-fade-in">
-  <table class="luxe-table">
-    <thead>
-      <tr>
-        <th>معرف المنتج التفصيلي</th>
-        <th>الفئة</th>
-        <th>مستوى المخزون</th>
-        <th>التقييم المالي</th>
-        <th>حالة التوفر</th>
-        <th class="text-right">إدارة</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of products">
-        <td>
-          <div class="product-info">
-            <div class="sku-badge">{{ product.sku }}</div>
-            <div class="name-box">
-              <span class="product-name">{{ product.name }}</span>
-              <span class="product-id">معرف: #{{ product.id }}</span>
-            </div>
-          </div>
-        </td>
-        <td>
-          <span class="category-chip">{{ product.category }}</span>
-        </td>
-        <td>
-          <div class="stock-info">
-            <span class="quantity">{{ product.stock }} وحدة</span>
-            <div class="stock-progress">
-              <div class="bar" [style.width.%]="product.stock > 100 ? 100 : product.stock" 
-                   [ngClass]="{'low': product.stock < 20, 'mid': product.stock >= 20 && product.stock < 80, 'high': product.stock >= 80}">
-              </div>
-            </div>
-          </div>
-        </td>
-        <td>
-          <span class="price">{{ product.price | currency:'USD':'symbol' }}</span>
-        </td>
-        <td>
-          <span class="badge" [ngClass]="{
-            'badge-success': product.status === 'in-stock',
-            'badge-warning': product.status === 'low-stock',
-            'badge-danger': product.status === 'out-of-stock'
-          }">
-            {{ product.status === 'in-stock' ? 'متوفر' : product.status === 'low-stock' ? 'مخزون منخفض' : 'نفذت الكمية' }}
-          </span>
-        </td>
-        <td class="text-right">
-          <div class="action-buttons">
-            <button class="action-btn" (click)="onAction('Edit', product)" aria-label="Edit">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            </button>
-            <button class="action-btn analytics" (click)="onAction('QuickView', product)" aria-label="QuickView">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <div class="empty-state" *ngIf="!products?.length">
-    <div class="empty-icon">📭</div>
-    <h3>المستودع فارغ حالياً</h3>
-    <p>لا توجد بيانات نشطة للمزامنة في هذه اللحظة.</p>
-    <button class="btn-luxe btn-primary" style="margin-top: 1rem;">مزامنة فورية</button>
+<div class="product-catalog-grid luxe-card">
+  <div class="pc-header">
+    <h3>كشف المخزون المتاح ({{ products?.length || 0 }} صنف)</h3>
+    <div class="pc-search-lite">
+       <span>🔍</span>
+       <input type="text" placeholder="بحث سريع في الرفوف...">
+    </div>
   </div>
+
+  <div class="catalog-items" *ngIf="products && products.length > 0; else noProducts">
+    <div *ngFor="let p of products" class="p-card pulse-hover">
+      <div class="p-badge" [class]="p.status">{{ p.status === 'instock' ? 'متوفر' : 'منخفض' }}</div>
+      <div class="p-img Luxe-gradient">
+        <span class="p-icon">📦</span>
+      </div>
+      <div class="p-info">
+        <h4 class="p-name">{{ p.name }}</h4>
+        <div class="p-sku">SKU: {{ p.sku }}</div>
+        <div class="p-meta">
+           <span class="p-qty"><b>{{ p.stock }}</b> قطعة</span>
+           <span class="p-price">{{ p.price | currency:'USD':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+      <div class="p-actions">
+        <button class="btn-item-luxe primary" (click)="onAction('RESTOCK', p)">طلب توريد 🚛</button>
+        <button class="btn-item-luxe ghost" (click)="onAction('EDIT', p)">⚙️</button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noProducts>
+    <div class="no-data-luxe">
+      <div class="nd-icon">📭</div>
+      <p>لا توجد أصناف في هذا التصنيف حالياً</p>
+    </div>
+  </ng-template>
 </div>

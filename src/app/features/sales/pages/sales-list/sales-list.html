@@ -1,0 +1,99 @@
+<div class="erp-page animate-fade-in sales-page">
+  <div class="page-header-luxe gray-bg">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة تدفق المبيعات</div>
+      <h1>💼 كشف البيعات والطلبات المركزية</h1>
+      <p>متابعة حركة المبيعات اليومية، فحص مستويات التحصيل، وإدارة علاقات الطلبات بكل دقة</p>
+    </div>
+    <div class="ph-actions">
+       <div class="ph-stats-lite">
+          <div class="ps-item"><span>نشط</span> <b>24</b></div>
+          <div class="ps-item"><span>قيمة</span> <b>$42.5K</b></div>
+       </div>
+       <button class="btn-luxe btn-primary" routerLink="/sales/create">
+          <span class="btn-icon">+</span> سجل بيعة جديدة
+       </button>
+    </div>
+  </div>
+
+  <div class="filter-strip-luxe luxe-card">
+    <div class="fs-search">
+       <span class="fs-icon">🔍</span>
+       <input type="text" [(ngModel)]="searchTerm" placeholder="البحث باسم العميل، رقم الفاتورة، أو الكود...">
+    </div>
+    <div class="fs-filters">
+       <select [(ngModel)]="filterStatus" class="luxe-select">
+          <option value="">كل الحالات</option>
+          <option value="pending">قيد الانتظار ⏳</option>
+          <option value="processing">جاري التجهيز 🏗️</option>
+          <option value="shipped">تم الشحن 🚚</option>
+          <option value="delivered">تم التسليم ✅</option>
+       </select>
+       <select [(ngModel)]="filterPayment" class="luxe-select">
+          <option value="">حالة الكاش</option>
+          <option value="paid">دفع كامل (خالص)</option>
+          <option value="partial">دفع جزئي</option>
+          <option value="unpaid">لم يتم الدفع</option>
+       </select>
+       <button class="btn-luxe btn-secondary" (click)="onExport('Excel')">📊 تصدير Excel</button>
+    </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-responsive" *ngIf="orders$ | async as orders">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th># رقم الحركة</th>
+                 <th>العميل المستفيد</th>
+                 <th>تاريخ العملية</th>
+                 <th>إجمالي القيمة</th>
+                 <th>عدد البنود</th>
+                 <th>حالة الطلب</th>
+                 <th>الوضع المالي</th>
+                 <th>الإجراءات</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let order of getFiltered(orders)" class="pulse-hover">
+                 <td class="code-cell"><span>INV</span>-{{ order.orderNo }}</td>
+                 <td class="customer-cell">
+                    <div class="c-info">
+                       <span class="c-name">{{ order.customer }}</span>
+                       <span class="c-sub">عميل مؤسسي</span>
+                    </div>
+                 </td>
+                 <td class="date-cell">{{ order.date }}</td>
+                 <td class="val-cell"><b>{{ order.total | currency:'USD' }}</b></td>
+                 <td class="items-cell">{{ order.items }}</td>
+                 <td class="status-cell">
+                    <span class="l-pill" [class]="order.status">
+                       <span class="dot"></span>
+                       {{ getStatusLabel(order.status) }}
+                    </span>
+                 </td>
+                 <td class="payment-cell">
+                    <span class="p-status" [class]="order.paymentStatus">
+                       {{ getPaymentLabel(order.paymentStatus) }}
+                    </span>
+                 </td>
+                 <td class="action-cell">
+                    <button class="i-btn" (click)="onView(order)" title="التفاصيل">👁️</button>
+                    <button class="i-btn" (click)="onPrint(order)" title="طباعة">🖨️</button>
+                    <button class="i-btn alert" (click)="onDelete(order)" title="حذف">🗑️</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+     
+     <div class="table-footer">
+        <p>عرض <b>{{ getFiltered((orders$ | async) || []).length }}</b> سجل من إجمالي 154 بيعة مسجلة.</p>
+        <div class="pagination-luxe">
+           <button class="p-btn active">1</button>
+           <button class="p-btn">2</button>
+           <button class="p-btn">→</button>
+        </div>
+     </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="erp-page animate-fade-in production-page">
+  <div class="page-header-luxe gray-bg">
+    <div class="ph-content">
+      <div class="ph-badge">سير العمل الإنتاجي</div>
+      <h1>🛠️ أوامر الإنتاج (Production Orders)</h1>
+      <p>متابعة الحالة التنفيذية لأوامر التصنيع وتخصيص الموارد البشرية والآلية</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-primary">
+          <span class="btn-icon">+</span> إصدار أمر إنتاج عاجل
+       </button>
+    </div>
+  </div>
+
+  <div class="orders-board">
+     <div class="board-column luxe-card">
+        <div class="bc-header"><h3>قيد الانتظار (Pending)</h3> <span class="bc-badge">3</span></div>
+        <div class="order-cards">
+           <div *ngFor="let order of getByStatus('pending')" class="order-card luxe-card">
+              <div class="oc-header">
+                 <span class="oc-code">#{{ order.id }}</span>
+                 <span class="oc-priority" [class]="order.priority">أولوية {{ order.priorityLabel }}</span>
+              </div>
+              <h4 class="oc-title">{{ order.product }}</h4>
+              <div class="oc-meta">الكمية: <span>{{ order.quantity }} وحدة</span></div>
+              <div class="oc-footer">
+                 <span class="oc-date">الاستحقاق: {{ order.dueDate }}</span>
+                 <button class="oc-btn">بدء العمل 🚀</button>
+              </div>
+           </div>
+        </div>
+     </div>
+
+     <div class="board-column luxe-card">
+        <div class="bc-header blue-head"><h3>تحت التشغيل (Ongoing)</h3> <span class="bc-badge">2</span></div>
+        <div class="order-cards">
+           <div *ngFor="let order of getByStatus('ongoing')" class="order-card luxe-card ongoing">
+              <div class="oc-header">
+                 <span class="oc-code">#{{ order.id }}</span>
+                 <span class="oc-status active-pulse">جاري التصنيع...</span>
+              </div>
+              <h4 class="oc-title">{{ order.product }}</h4>
+              <div class="oc-progress">
+                 <div class="pr-info"><span>الإنجاز</span> <span>{{ order.progress }}%</span></div>
+                 <div class="pr-bg"><div class="pf" [style.width]="order.progress + '%'"></div></div>
+              </div>
+              <div class="oc-meta">خط الإنتاج: <span>{{ order.line }}</span></div>
+              <div class="oc-footer">
+                 <span class="oc-workers">👷 {{ order.workers }} موظفين</span>
+                 <button class="oc-btn secondary">إيقاف مؤقت ⏸️</button>
+              </div>
+           </div>
+        </div>
+     </div>
+
+     <div class="board-column luxe-card">
+        <div class="bc-header green-head"><h3>مكتمل (Completed)</h3> <span class="bc-badge">1</span></div>
+        <div class="order-cards">
+           <div *ngFor="let order of getByStatus('completed')" class="order-card luxe-card completed">
+              <div class="oc-header">
+                 <span class="oc-code">#{{ order.id }}</span>
+                 <span class="oc-status-done">✅ تم المراجعة</span>
+              </div>
+              <h4 class="oc-title">{{ order.product }}</h4>
+              <div class="oc-meta">تم التسليم للمخازن بتاريخ: <span>{{ order.dueDate }}</span></div>
+              <div class="oc-footer">
+                 <span class="oc-quality">جودة: 100/100</span>
+                 <button class="oc-btn success">ترحيل للمخزن 🏬</button>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>

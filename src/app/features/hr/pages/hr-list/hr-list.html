@@ -1,0 +1,123 @@
+<div class="erp-page animate-fade-in hr-page">
+  <div class="page-header-luxe success-accent">
+    <div class="ph-content">
+      <div class="ph-badge">إدارة رأس المال البشري</div>
+      <h1>👔 شؤون الموظفين والكوادر</h1>
+      <p>تنظيم ملفات الموظفين، تتبع الحضور، إدارة الرواتب، وتطوير المسارات الوظيفية للمؤسسة</p>
+    </div>
+    <div class="ph-actions">
+       <button class="btn-luxe btn-ghost">📅 سجل الحضور اليومي</button>
+       <button class="btn-luxe btn-primary" routerLink="/hr/create">
+          <span class="btn-icon">+</span> إضافة موظف جديد
+       </button>
+    </div>
+  </div>
+
+  <div class="stats-grid-luxe hr-summary mt-1-5">
+     <div class="luxe-card hr-stat">
+        <div class="hs-icon">👥</div>
+        <div class="hs-info">
+           <span class="hs-label">إجمالي الموظفين</span>
+           <h2 class="hs-val">28</h2>
+           <span class="hs-trend">بزيادة 3% صعوداً</span>
+        </div>
+     </div>
+     <div class="luxe-card hr-stat">
+        <div class="hs-icon active">✅</div>
+        <div class="hs-info">
+           <span class="hs-label">موظفون نشطون</span>
+           <h2 class="hs-val">25</h2>
+           <span class="hs-trend success">على رأس العمل</span>
+        </div>
+     </div>
+     <div class="luxe-card hr-stat">
+        <div class="hs-icon warn">🏖️</div>
+        <div class="hs-info">
+           <span class="hs-label">في إجازة</span>
+           <h2 class="hs-val">3</h2>
+           <span class="hs-trend">إجازات سنوية/مرضية</span>
+        </div>
+     </div>
+     <div class="luxe-card hr-stat">
+        <div class="hs-icon primary">💰</div>
+        <div class="hs-info">
+           <span class="hs-label">رواتب هذا الشهر</span>
+           <h2 class="hs-val">$48.5K</h2>
+           <span class="hs-trend">بانتظار التحويل المالي</span>
+        </div>
+     </div>
+  </div>
+
+  <div class="filter-strip-luxe luxe-card mt-1-5">
+    <div class="fs-search">
+       <span class="fs-icon">🔍</span>
+       <input type="text" [(ngModel)]="searchTerm" placeholder="البحث باسم الموظف، المسمى الوظيفي، أو الرقم الوظيفي...">
+    </div>
+    <div class="fs-filters">
+       <select [(ngModel)]="filterDept" class="luxe-select">
+          <option value="">كل الأقسام</option>
+          <option value="تقنية المعلومات">تقنية المعلومات 💻</option>
+          <option value="المبيعات">المبيعات 🛒</option>
+          <option value="المحاسبة">المحاسبة 📔</option>
+          <option value="الموارد البشرية">الموارد البشرية 👔</option>
+       </select>
+       <button class="btn-luxe btn-secondary">📊 تقرير ربع سنوي</button>
+    </div>
+  </div>
+
+  <div class="luxe-card data-card mt-1-5">
+     <div class="table-header-luxe">
+        <h3>قائمة الكوادر البشرية ({{ (employees$ | async)?.length }})</h3>
+        <span class="badge-lite">تم تحديث البيانات منذ 5 دقائق</span>
+     </div>
+     <div class="table-responsive" *ngIf="employees$ | async as employees">
+        <table class="luxe-table">
+           <thead>
+              <tr>
+                 <th>الموظف</th>
+                 <th>القسم المؤسسي</th>
+                 <th>المسمى الوظيفي</th>
+                 <th>الراتب الأساسي</th>
+                 <th>تاريخ التعيين</th>
+                 <th>حالة العمل</th>
+                 <th>الإجراءات</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let emp of getFiltered(employees)" class="pulse-hover">
+                 <td class="user-cell">
+                    <div class="avatar-ring luxe-shadow">{{ emp.name.charAt(0) }}</div>
+                    <div class="u-info">
+                       <span class="u-name">{{ emp.name }}</span>
+                       <span class="u-email">{{ emp.email }}</span>
+                    </div>
+                 </td>
+                 <td class="dept-cell"><span class="dept-pill">{{ emp.department }}</span></td>
+                 <td class="pos-cell">{{ emp.position }}</td>
+                 <td class="sal-cell"><b>{{ emp.salary | currency:'USD':'symbol':'1.0-0' }}</b></td>
+                 <td class="date-cell">{{ emp.startDate }}</td>
+                 <td class="status-cell">
+                    <span class="l-pill" [class]="emp.status">
+                       <span class="dot"></span>
+                       {{ emp.status === 'active' ? 'نشط' : emp.status === 'on_leave' ? 'في إجازة' : 'منتهي الخدمة' }}
+                    </span>
+                 </td>
+                 <td class="action-cell">
+                    <button class="i-btn" [routerLink]="['/hr/edit', emp.id]" title="تعديل">✏️</button>
+                    <button class="i-btn alert" title="إنهاء الخدمة">🛑</button>
+                 </td>
+              </tr>
+           </tbody>
+        </table>
+     </div>
+     
+     <div class="table-footer">
+        <p>عرض <b>{{ getFiltered((employees$ | async) || []).length }}</b> موظف نشط في النظام.</p>
+        <div class="pagination-luxe">
+           <button class="p-btn active">1</button>
+           <button class="p-btn">2</button>
+           <button class="p-btn">→</button>
+        </div>
+     </div>
+  </div>
+</div>

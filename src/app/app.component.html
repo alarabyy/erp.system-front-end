@@ -1,6 +1,6 @@
-<div class="app-container" [class.is-authenticated]="isAuthenticated$ | async">
-  <!-- الـ Sidebar والـ Navbar يظهرون فقط إذا كان المستخدم مسجل دخول -->
-  <ng-container *ngIf="isAuthenticated$ | async as loggedIn; else loggedOut">
+<div class="app-container" [class.is-authenticated]="showLayout$ | async">
+  <!-- الـ Sidebar والـ Navbar يظهرون فقط إذا كان المستخدم مسجل وبشرط أن لا نكون في صفحة الـ Auth -->
+  <ng-container *ngIf="showLayout$ | async as loggedIn; else loggedOut">
     <app-sidebar></app-sidebar>
     <div class="main-content">
       <app-navbar></app-navbar>

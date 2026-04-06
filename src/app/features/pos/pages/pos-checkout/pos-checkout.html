@@ -1,0 +1,87 @@
+<div class="pos-screen animate-fade-in RTL">
+  <!-- POS Left: Product Selection -->
+  <div class="pos-products-panel">
+    <header class="pos-header">
+      <div class="ph-search luxe-card shadow-sm">
+        <span class="ph-search-icon">🔍</span>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="ابحث باسم المنتج أو الـ SKU...">
+      </div>
+      <div class="ph-categories">
+        <div *ngFor="let cat of categories" class="cat-chip" [class.active]="selectedCategory === cat" (click)="selectedCategory = cat">
+          {{ cat }}
+        </div>
+      </div>
+    </header>
+
+    <div class="products-grid custom-scrollbar" *ngIf="products$ | async as products">
+      <div *ngFor="let p of getFilteredProducts(products)" class="p-card luxe-card" (click)="addToCart(p)">
+        <div class="p-img">
+           <span class="p-icon">📦</span>
+           <span class="p-stock" [class.low]="p.stock < 10">{{ p.stock }} قطعة</span>
+        </div>
+        <div class="p-info">
+          <h4 class="p-name">{{ p.name }}</h4>
+          <div class="p-price-row">
+            <span class="p-sku">#{{ p.sku }}</span>
+            <span class="p-price">{{ p.price | currency:'USD':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POS Right: Cart and Checkout -->
+  <div class="pos-cart-panel luxe-card">
+    <div class="cart-header">
+      <h3>🛍️ سلة المشتريات</h3>
+      <button class="btn-clear" (click)="clearCart()">🧹 تفريغ</button>
+    </div>
+
+    <div class="cart-items custom-scrollbar">
+      <div *ngFor="let item of cart; let i = index" class="cart-item">
+        <div class="ci-info">
+           <span class="ci-name">{{ item.product.name }}</span>
+           <span class="ci-price">{{ item.product.price | currency:'USD':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="ci-controls">
+           <button (click)="updateQuantity(i, -1)">-</button>
+           <span class="ci-qty">{{ item.quantity }}</span>
+           <button (click)="updateQuantity(i, 1)">+</button>
+        </div>
+        <div class="ci-total">
+           {{ (item.product.price * item.quantity) | currency:'USD':'symbol':'1.0-0' }}
+        </div>
+        <button class="ci-del" (click)="removeFromCart(i)">×</button>
+      </div>
+
+      <div *ngIf="cart.length === 0" class="empty-cart">
+         <span class="ec-icon">🛒</span>
+         <p>ابدأ بإضافة المنتجات للسلة</p>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>المجموع الفرعي:</span>
+        <b>{{ getSubtotal() | currency:'USD':'symbol':'1.0-0' }}</b>
+      </div>
+      <div class="summary-row">
+        <span>ضريبة القيمة المضافة (15%):</span>
+        <b>{{ getTax() | currency:'USD':'symbol':'1.0-0' }}</b>
+      </div>
+      <div class="summary-row total">
+        <span>الإجمالي المستحق:</span>
+        <b>{{ getTotal() | currency:'USD':'symbol':'1.0-0' }}</b>
+      </div>
+
+      <div class="checkout-actions">
+        <button class="btn-pos card">💳 بطاقة بنكية</button>
+        <button class="btn-pos cash">💵 دفع نقدي</button>
+      </div>
+      
+      <button class="btn-checkout" [disabled]="cart.length === 0" (click)="onCheckout()">
+         ⚡ تأكيد وإتمام الطلب
+      </button>
+    </div>
+  </div>
+</div>
